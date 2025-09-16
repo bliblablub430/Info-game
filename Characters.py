@@ -15,7 +15,6 @@ xn, yn = 800, 600
 hn, ln = 50, 50
 steps = 0
 npcspeed = 5
-
 npc = pygame.Rect(xn, yn, hn, ln)
 
 pixles = []
@@ -62,13 +61,28 @@ def npcmovement(npc, steps, npcspeed):
     elif steps == 80:
         steps = 0
     steps += 1
+    return steps
+
+def drawing(screen, character, npc, pixles):
+     #check for drawing a pixel
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_j]:
+        pixles.append(draw(x, y))
+    #Drawing everything
+    screen.fill((0, 0, 0)) # Clear screen
+    pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
+    pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
+    for p in pixles:
+        pygame.draw.rect(screen, (0, 255, 0), (p))
+    pygame.display.update() # Update the display
+
 
 def draw(x,y):
     return pygame.Rect(x, y, 50, 50)
 
 running = True
 while running:
-    # --- Event Handling ---
+    #Event Handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT: # Added a proper quit check
             running = False
@@ -77,23 +91,9 @@ while running:
                 running = False
 
     x, y = movement(x, y, speed)
-    npcmovement(npc, steps, npcspeed)
+    steps = npcmovement(npc, steps, npcspeed)
+    drawing(screen, character, npc, pixles)
 
-    #check for drawing a pixel
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_j]:
-        pixles.append(draw(x, y))
-
-
-    # --- Drawing (all in the main loop) ---
-    screen.fill((0, 0, 0)) # Clear screen
-    pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
-    pygame.draw.rect(screen, (255, 0, 0), npc)
-    for p in pixles:
-        pygame.draw.rect(screen, (0, 255, 0), (p))
-    pygame.display.update() # Update the display
-
-    # --- Frame Rate ---
     clock.tick(60)
 
 pygame.quit() # Quit pygame properly
