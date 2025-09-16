@@ -8,14 +8,24 @@ clock = pygame.time.Clock()
 # Player variables
 x, y = 700, 500
 h, l = 50, 50
-speed = 15
+speed = 5
+character = pygame.Rect(x, y, h, l)
+
 xn, yn = 800, 600
 hn, ln = 50, 50
 steps = 0
 npcspeed = 5
-character = pygame.Rect(x, y, h, l)
 npc = pygame.Rect(xn, yn, hn, ln)
 
+pixles = []
+
+def movement(x, y, speed):
+    dx, dy = get_movement_vector() 
+    x += dx * speed
+    character.x = x
+    y += dy * speed
+    character.y = y
+    return x, y
 
 def get_movement_vector():
     dx, dy = 0, 0  # Start with no movement
@@ -38,25 +48,8 @@ def get_movement_vector():
         
     return dx, dy # Return the calculated direction
 
-running = True
-while running:
-    # --- Event Handling ---
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: # Added a proper quit check
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-
-    # --- Game Logic ---
-    # 1. Get the normalized direction vector from the function
-    dx, dy = get_movement_vector() 
-    # 2. Update player position in the main loop
-    x += dx * speed
-    character.x = x
-    y += dy * speed
-    character.y = y
-
+def npcmovement(npc, steps, npcspeed):
+    #NPC algorythm
     if steps < 20:
         npc.x += npcspeed
     elif steps >= 20 and steps < 40:
@@ -68,14 +61,39 @@ while running:
     elif steps == 80:
         steps = 0
     steps += 1
+    return steps
 
-    # --- Drawing (all in the main loop) ---
+def drawing(screen, character, npc, pixles):
+     #check for drawing a pixel
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_j]:
+        pixles.append(draw(x, y))
+    #Drawing everything
     screen.fill((0, 0, 0)) # Clear screen
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
-    pygame.draw.rect(screen, (255, 0, 0), npc)
+    pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
+    for p in pixles:
+        pygame.draw.rect(screen, (0, 255, 0), (p))
     pygame.display.update() # Update the display
 
-    # --- Frame Rate ---
+
+def draw(x,y):
+    return pygame.Rect(x, y, 50, 50)
+
+running = True
+while running:
+    #Event Handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: # Added a proper quit check
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+
+    x, y = movement(x, y, speed)
+    steps = npcmovement(npc, steps, npcspeed)
+    drawing(screen, character, npc, pixles)
+
     clock.tick(60)
 
 pygame.quit() # Quit pygame properly
