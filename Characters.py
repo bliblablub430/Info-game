@@ -30,31 +30,3 @@ def get_movement_vector():
         dy = dy / vector_len
         
     return dx, dy # Return the calculated direction
-
-running = True
-while running:
-    # --- Event Handling ---
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: # Added a proper quit check
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-
-    # --- Game Logic ---
-    # 1. Get the normalized direction vector from the function
-    dx, dy = get_movement_vector() 
-    
-    # 2. Update player position in the main loop
-    x += dx * speed
-    y += dy * speed
-
-    # --- Drawing (all in the main loop) ---
-    screen.fill((0, 0, 0)) # Clear screen
-    pygame.draw.rect(screen, (0, 0, 255), (x, y, h, l)) # Draw player
-    pygame.display.update() # Update the display
-
-    # --- Frame Rate ---
-    clock.tick(60)
-
-pygame.quit() # Quit pygame properly
