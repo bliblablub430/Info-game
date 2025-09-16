@@ -1,5 +1,6 @@
 import pygame
 import random 
+import Characters
 
 pygame.init()
 pygame.Rect
@@ -20,11 +21,10 @@ def escaperoulette():
 
 def rouletteloop():
     if game_state == "normal":
-        # --- Spielerbewegung (wie du sie schon hast) ---
-        
         # --- KOLLISIONS-CHECK ---
         # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
-        if character.rect.colliderect(roulette_trigger_zone):
+        aktuelles_spieler_rect = pygame.Rect(x, y, h, l)
+        if aktuelles_spieler_rect.colliderect(roulette_trigger_zone):
             # !! TRIGGER !!
             # Der Spieler hat die Zone betreten. Wechsle den Zustand.
             print("Willkommen beim Roulette! Drücke 'Q' zum Verlassen.")
