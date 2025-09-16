@@ -43,11 +43,22 @@ def roulettespiel():
         wunsch = list(wunsch)
     zusäztlichebets = int(input("auf wie viele Zahlen willst du noch setzten?"))
     for i in range(zusäztlichebets):
-        
+        bet = int(input("auf welche Zahl möchtest du setzen:"))
+        wunsch.append(bet)
+    if roulettechance in wunsch:
+        print("you win")
+    else:
+        print("you lose")
+    erneut = input("drücke y um nochmals zu spielen")
+    if erneut == "y":
+        roulettespiel
+    else:
+        print("drücke q um das Spiel zu verlassen")
 
 # "normal" = Spieler läuft herum
 # "roulette" = Roulette-Menü ist offen
 game_state = "normal"
+
 while running:
     # 1. Events prüfen (z.B. pygame.QUIT)
     for event in pygame.event.get():
@@ -73,12 +84,9 @@ while running:
             game_state = "roulette"
 
     elif game_state == "roulette":
-        # --- ROULETTE-LOGIK ---
-        # deine Roulette-Funktion.
+        while game_state == "roulette":
+            roulettespiel
         pass
-
-    # 3. Alles zeichnen (Drawing)
-    pygame.screen.fill((0, 0, 0)) # Hintergrund
 
     # Zeichne die Trigger-Zone (zum Testen)
     pygame.draw.rect(screen, (255, 0, 0), roulette_trigger_zone)
