@@ -9,6 +9,7 @@ clock = pygame.time.Clock()
 x, y = 700, 500
 h, l = 50, 50
 speed = 15
+character = pygame.Rect(x, y, h, l)
 
 def get_movement_vector():
     dx, dy = 0, 0  # Start with no movement
@@ -47,11 +48,13 @@ while running:
     
     # 2. Update player position in the main loop
     x += dx * speed
+    character.x = x
     y += dy * speed
+    character.y = y
 
     # --- Drawing (all in the main loop) ---
     screen.fill((0, 0, 0)) # Clear screen
-    pygame.draw.rect(screen, (0, 0, 255), (x, y, h, l)) # Draw player
+    pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
     pygame.display.update() # Update the display
 
     # --- Frame Rate ---
