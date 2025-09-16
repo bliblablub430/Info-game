@@ -6,10 +6,16 @@ pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
 # Player variables
-x, y = 700, 500
-h, l = 50, 50
+xc, yc = 700, 500
+hc, lc = 50, 50
 speed = 15
-character = pygame.Rect(x, y, h, l)
+xn, yn = 800, 600
+hn, ln = 50, 50
+steps = 0
+npcspeed = 5
+character = pygame.Rect(xc, yc, hc, lc)
+npc = pygame.Rect(xn, yn, hn, ln)
+
 
 def get_movement_vector():
     dx, dy = 0, 0  # Start with no movement
@@ -45,16 +51,28 @@ while running:
     # --- Game Logic ---
     # 1. Get the normalized direction vector from the function
     dx, dy = get_movement_vector() 
-    
     # 2. Update player position in the main loop
-    x += dx * speed
-    character.x = x
-    y += dy * speed
-    character.y = y
+    xc += dx * speed
+    character.x = xc
+    yc += dy * speed
+    character.y = yc
+
+    if steps < 20:
+        npc.x += npcspeed
+    elif steps >= 20 and steps < 40:
+        npc.y += npcspeed
+    elif steps >= 40 and steps < 60:
+        npc.x -= npcspeed
+    elif steps >= 60 and steps < 80:
+        npc.y -= npcspeed
+    elif steps == 80:
+        steps = 0
+    steps += 1
 
     # --- Drawing (all in the main loop) ---
     screen.fill((0, 0, 0)) # Clear screen
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
+    pygame.draw.rect(screen, (255, 0, 0), npc)
     pygame.display.update() # Update the display
 
     # --- Frame Rate ---
