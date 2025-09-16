@@ -6,14 +6,14 @@ pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
 # Player variables
-xc, yc = 700, 500
-hc, lc = 50, 50
+x, y = 700, 500
+h, l = 50, 50
 speed = 15
 xn, yn = 800, 600
 hn, ln = 50, 50
 steps = 0
 npcspeed = 5
-character = pygame.Rect(xc, yc, hc, lc)
+character = pygame.Rect(x, y, h, l)
 npc = pygame.Rect(xn, yn, hn, ln)
 
 
@@ -52,10 +52,10 @@ while running:
     # 1. Get the normalized direction vector from the function
     dx, dy = get_movement_vector() 
     # 2. Update player position in the main loop
-    xc += dx * speed
-    character.x = xc
-    yc += dy * speed
-    character.y = yc
+    x += dx * speed
+    character.x = x
+    y += dy * speed
+    character.y = y
 
     if steps < 20:
         npc.x += npcspeed
