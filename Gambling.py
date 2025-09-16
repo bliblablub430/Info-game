@@ -1,5 +1,6 @@
 import pygame
 import random 
+import Characters
 
 pygame.init()
 pygame.Rect
@@ -12,6 +13,35 @@ roulette_trigger_zone = pygame.Rect(roulette_X, roulette_Y, roulette_Breite, rou
 running = True
 roulettechance = random.randint(0,36)
 würfelchance = random.randint(1,6)
+
+def escaperoulette():
+    if game_state == "roulette" and event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q: # 'Q' zum Beenden
+                game_state = "normal"
+
+def rouletteloop():
+    if game_state == "normal":
+        # --- KOLLISIONS-CHECK ---
+        # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
+        aktuelles_spieler_rect = pygame.Rect(x, y, h, l)
+        if aktuelles_spieler_rect.colliderect(roulette_trigger_zone):
+            # !! TRIGGER !!
+            # Der Spieler hat die Zone betreten. Wechsle den Zustand.
+            print("Willkommen beim Roulette! Drücke 'Q' zum Verlassen.")
+            game_state = "roulette"
+
+    elif game_state == "roulette":
+        while game_state == "roulette":
+            roulettespiel()
+        pass
+
+    # Zeichne die Trigger-Zone (zum Testen)
+    pygame.draw.rect(screen, (255, 0, 0), roulette_trigger_zone)
+
+    if game_state == "roulette":
+        # Zeichne das Roulette-UI über alles andere
+        # z.B. zeichne_roulette_ui(screen)
+        pass
 
 def roulettespiel():
     print("drücke r um auf Rot zu setzen" \
@@ -67,34 +97,7 @@ while running:
         
         # --- Beispiel: Roulette verlassen ---
         # Wenn wir im Roulette-Modus sind, brauchen wir einen Weg zurück
-        if game_state == "roulette" and event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q: # 'Q' zum Beenden
-                game_state = "normal"
+        escaperoulette()
 
     # 2. Spiel-Logik basierend auf dem Zustand
-    if game_state == "normal":
-        # --- Spielerbewegung (wie du sie schon hast) ---
-        
-        # --- KOLLISIONS-CHECK ---
-        # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
-        if character.rect.colliderect(roulette_trigger_zone):
-            # !! TRIGGER !!
-            # Der Spieler hat die Zone betreten. Wechsle den Zustand.
-            print("Willkommen beim Roulette! Drücke 'Q' zum Verlassen.")
-            game_state = "roulette"
-
-    elif game_state == "roulette":
-        while game_state == "normal":
-            roulettechance()
-        pass
-
-    # Zeichne die Trigger-Zone (zum Testen)
-    pygame.draw.rect(screen, (255, 0, 0), roulette_trigger_zone)
-
-    if game_state == "roulette":
-        # Zeichne das Roulette-UI über alles andere
-        # z.B. zeichne_roulette_ui(screen)
-        pass
-
-pygame.display.flip()
-clock.tick(60)
+    rouletteloop()
