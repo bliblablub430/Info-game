@@ -5,25 +5,32 @@ import Characters
 pygame.init()
 pygame.Rect
 
-roulette_X = 300
-roulette_Y = 200
+roulette_X = 760
+roulette_Y = 560
 roulette_Breite = 50
 roulette_Höhe = 50
 roulette_trigger_zone = pygame.Rect(roulette_X, roulette_Y, roulette_Breite, roulette_Höhe)
 running = True
 roulettechance = random.randint(0,36)
 würfelchance = random.randint(1,6)
+game_state = "normal"
 
-def escaperoulette():
+def escaperoulette(game_state, event):
     if game_state == "roulette" and event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q: # 'Q' zum Beenden
-                game_state = "normal"
+        if event.key == pygame.K_q: # 'Q' zum Beenden
+            game_state = "normal"
+    return game_state
 
-def rouletteloop():
+def rouletteloop(game_state):
     if game_state == "normal":
+        dx, dy = Characters.get_movement_vector()
+
+        Characters.x += dx * Characters.speed
+        Characters.y += dy * Characters.speed
+        
         # --- KOLLISIONS-CHECK ---
         # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
-        aktuelles_spieler_rect = pygame.Rect(x, y, h, l)
+        aktuelles_spieler_rect = pygame.Rect(Characters.x, Characters.y, Characters.h, Characters.l)
         if aktuelles_spieler_rect.colliderect(roulette_trigger_zone):
             # !! TRIGGER !!
             # Der Spieler hat die Zone betreten. Wechsle den Zustand.
@@ -31,17 +38,8 @@ def rouletteloop():
             game_state = "roulette"
 
     elif game_state == "roulette":
-        while game_state == "roulette":
             roulettespiel()
-        pass
-
-    # Zeichne die Trigger-Zone (zum Testen)
-    pygame.draw.rect(screen, (255, 0, 0), roulette_trigger_zone)
-
-    if game_state == "roulette":
-        # Zeichne das Roulette-UI über alles andere
-        # z.B. zeichne_roulette_ui(screen)
-        pass
+    return game_state
 
 def roulettespiel():
     print("drücke r um auf Rot zu setzen" \
@@ -50,7 +48,7 @@ def roulettespiel():
     "drücke g um auf die geraden Zahlen zu setzen oder u um auf die Ungeraden zu setzen" \
     "drücke c um auf das erste Drittel zu setzen oder auf v um auf das zweite Drittel zu setzten oder auf b für das dritte Drittel" \
     "drücke y um auf eine belibige Zahl zu setzten")
-    wunsch = int(input("Bets please:"))
+    wunsch = input("Bets please:")
     if wunsch == "r":
         wunsch = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
     elif wunsch == "s":
@@ -84,20 +82,3 @@ def roulettespiel():
         roulettespiel()
     else:
         print("drücke q um das Spiel zu verlassen")
-
-# "normal" = Spieler läuft herum
-# "roulette" = Roulette-Menü ist offen
-game_state = "normal"
-
-while running:
-    # 1. Events prüfen (z.B. pygame.QUIT)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        
-        # --- Beispiel: Roulette verlassen ---
-        # Wenn wir im Roulette-Modus sind, brauchen wir einen Weg zurück
-        escaperoulette()
-
-    # 2. Spiel-Logik basierend auf dem Zustand
-    rouletteloop()
