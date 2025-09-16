@@ -20,6 +20,13 @@ npc = pygame.Rect(xn, yn, hn, ln)
 
 pixles = []
 
+def movement(x, y, speed):
+    dx, dy = get_movement_vector() 
+    x += dx * speed
+    character.x = x
+    y += dy * speed
+    character.y = y
+    return x, y
 
 def get_movement_vector():
     dx, dy = 0, 0  # Start with no movement
@@ -42,6 +49,20 @@ def get_movement_vector():
         
     return dx, dy # Return the calculated direction
 
+def npcmovement(npc, steps, npcspeed):
+    #NPC algorythm
+    if steps < 20:
+        npc.x += npcspeed
+    elif steps >= 20 and steps < 40:
+        npc.y += npcspeed
+    elif steps >= 40 and steps < 60:
+        npc.x -= npcspeed
+    elif steps >= 60 and steps < 80:
+        npc.y -= npcspeed
+    elif steps == 80:
+        steps = 0
+    steps += 1
+
 def draw(x,y):
     return pygame.Rect(x, y, 50, 50)
 
@@ -55,27 +76,8 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
-    # --- Game Logic ---
-    # 1. Get the normalized direction vector from the function
-    dx, dy = get_movement_vector() 
-    # 2. Update player position in the main loop
-    x += dx * speed
-    character.x = x
-    y += dy * speed
-    character.y = y
-
-    #NPC algorythm
-    if steps < 20:
-        npc.x += npcspeed
-    elif steps >= 20 and steps < 40:
-        npc.y += npcspeed
-    elif steps >= 40 and steps < 60:
-        npc.x -= npcspeed
-    elif steps >= 60 and steps < 80:
-        npc.y -= npcspeed
-    elif steps == 80:
-        steps = 0
-    steps += 1
+    x, y = movement(x, y, speed)
+    npcmovement(npc, steps, npcspeed)
 
     #check for drawing a pixel
     keys = pygame.key.get_pressed()
