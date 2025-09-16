@@ -49,6 +49,14 @@ def roulettespiel():
         print("you win")
     else:
         print("you lose")
+<<<<<<< HEAD
+=======
+    erneut = input("drücke y um nochmals zu spielen")
+    if erneut == "y":
+        roulettespiel
+    else:
+        print("drücke q um das Spiel zu verlassen")
+>>>>>>> Gambling
 
 # "normal" = Spieler läuft herum
 # "roulette" = Roulette-Menü ist offen
@@ -79,6 +87,7 @@ while running:
             game_state = "roulette"
 
     elif game_state == "roulette":
+<<<<<<< HEAD
         # --- ROULETTE-LOGIK ---
         # deine Roulette-Funktion.
         pass
@@ -86,6 +95,12 @@ while running:
     # 3. Alles zeichnen (Drawing)
     pygame.screen.fill((0, 0, 0)) # Hintergrund
 
+=======
+        while game_state == "roulette":
+            roulettespiel
+        pass
+
+>>>>>>> Gambling
     # Zeichne die Trigger-Zone (zum Testen)
     pygame.draw.rect(screen, (255, 0, 0), roulette_trigger_zone)
 
