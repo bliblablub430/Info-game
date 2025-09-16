@@ -8,13 +8,17 @@ clock = pygame.time.Clock()
 # Player variables
 x, y = 700, 500
 h, l = 50, 50
-speed = 15
+speed = 5
+character = pygame.Rect(x, y, h, l)
+
 xn, yn = 800, 600
 hn, ln = 50, 50
 steps = 0
 npcspeed = 5
-character = pygame.Rect(x, y, h, l)
+
 npc = pygame.Rect(xn, yn, hn, ln)
+
+pixles = []
 
 
 def get_movement_vector():
@@ -38,6 +42,9 @@ def get_movement_vector():
         
     return dx, dy # Return the calculated direction
 
+def draw(x,y):
+    return pygame.Rect(x, y, 50, 50)
+
 running = True
 while running:
     # --- Event Handling ---
@@ -57,6 +64,7 @@ while running:
     y += dy * speed
     character.y = y
 
+    #NPC algorythm
     if steps < 20:
         npc.x += npcspeed
     elif steps >= 20 and steps < 40:
@@ -69,10 +77,18 @@ while running:
         steps = 0
     steps += 1
 
+    #check for drawing a pixel
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_j]:
+        pixles.append(draw(x, y))
+
+
     # --- Drawing (all in the main loop) ---
     screen.fill((0, 0, 0)) # Clear screen
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
     pygame.draw.rect(screen, (255, 0, 0), npc)
+    for p in pixles:
+        pygame.draw.rect(screen, (0, 255, 0), (p))
     pygame.display.update() # Update the display
 
     # --- Frame Rate ---
