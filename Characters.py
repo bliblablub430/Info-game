@@ -1,7 +1,7 @@
 import pygame
+import ostblock
 
 pygame.init()
-screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
@@ -22,10 +22,8 @@ pixles = []
 def movement(x, y, speed):
     dx, dy = get_movement_vector() 
     x += dx * speed
-    character.x = x
     y += dy * speed
-    character.y = y
-    return x, y
+    return x, y, (dx*speed), (dy*speed)
 
 def get_movement_vector():
     dx, dy = 0, 0  # Start with no movement
@@ -40,6 +38,7 @@ def get_movement_vector():
     if keys[pygame.K_s]:
         dy += 1
         
+
     # Normalize the vector (so diagonal movement isn't faster)
     if dx != 0 or dy != 0:
         vector_len = (dx**2 + dy**2)**0.5
@@ -69,16 +68,20 @@ def drawing(screen, character, npc, pixles):
     if keys[pygame.K_j]:
         pixles.append(draw(character.x, character.y))
     #Drawing everything
+    ostblock.walldraw(screen) #Draw wall
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
     pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
     for p in pixles:
-        pygame.draw.rect(screen, (0, 255, 0), (p))
+        pygame.draw.rect(screen, (0, 255, 0), (p)) #Draw pixles
 
 
 def draw(x,y):
     return pygame.Rect(x, y, 50, 50)
 
 if __name__ == "__main__":
+
+    screen = pygame.display.set_mode((1920, 1080))
+
     running = True
     while running:
         #Event Handling
@@ -91,8 +94,9 @@ if __name__ == "__main__":
 
         x, y = movement(x, y, speed)
         steps = npcmovement(npc, steps, npcspeed)
+        screen.fill((0, 0, 0)) # Clear screen
         drawing(screen, character, npc, pixles)
-        pygame.display.update()
+        pygame.display.update() # Update the display
         clock.tick(60)
-        
+
     pygame.quit() # Quit pygame properly
