@@ -80,20 +80,21 @@ def drawing(screen, character, npc, pixles):
 def draw(x,y):
     return pygame.Rect(x, y, 50, 50)
 
-running = True
-while running:
-    #Event Handling
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: # Added a proper quit check
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+if __name__ == "__main__":
+    running = True
+    while running:
+        #Event Handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: # Added a proper quit check
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
-    x, y = movement(x, y, speed)
-    steps = npcmovement(npc, steps, npcspeed)
-    drawing(screen, character, npc, pixles)
+        x, y = movement(x, y, speed)
+        steps = npcmovement(npc, steps, npcspeed)
+        drawing(screen, character, npc, pixles)
 
-    clock.tick(60)
+        clock.tick(60)
 
-pygame.quit() # Quit pygame properly
+    pygame.quit() # Quit pygame properly
