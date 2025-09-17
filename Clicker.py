@@ -22,7 +22,7 @@ button_rect = pygame.Rect(150, 120, 100, 60)
 
 def draw_game(score):
     screen.fill(WHITE)
-    # Punkte anzeigen
+    # Zeigt Punkte an
     score_text = font.render(f"Punkte: {score}", True, BLACK)
     screen.blit(score_text, (120, 40))
     # Button zeichnen
@@ -44,3 +44,4 @@ while True:
 
     draw_game(score)
     pygame.display.flip()
+    

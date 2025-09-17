@@ -19,10 +19,9 @@ OVERLAY_POS_Y = 10
 # Font
 font = pygame.font.SysFont(None, 24)
 
-# Beispiel-Stats
-player_pos = [100, 200]
-player_speed = 5
-predator_pos = [400, 300]
+
+player_pos = [character.x, character.y]
+predator_pos = []
 
 def draw_stats(surface, pos, speed, predator):
     """
