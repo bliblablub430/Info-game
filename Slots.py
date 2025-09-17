@@ -100,16 +100,3 @@ def slotszeichnen(screen, slots_state, Ergebnisliste, Mitteilung):
         screen.blit(symbol_text, (880, 400))
         screen.blit(mitteilung_text, (820, 500))
         screen.blit(weiter_text, (750, 550))
-
-
-
-if __name__ == "__main__":
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        screen.fill((255, 255, 255))
-        screen.blit(text1, (500, 500))
-        pygame.display.update()
-    pygame.quit()
