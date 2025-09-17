@@ -25,9 +25,11 @@ while running:
 
     # RUFE die rouletteloop auf und fange den neuen State auf
     game_state, current_state = Gambling.rouletteloop(game_state, current_state, events)
-
+    Characters.steps = Characters.npcmovement(Characters.npc, Characters.steps, Characters.npcspeed)
+    Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles)
+    
     # --- ZEICHNEN ---
-    screen.fill((0, 0, 0)) # Hintergrund 
+    screen.fill((0, 0, 0)) # Hintergrund
     pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
     pygame.draw.rect(screen, (0, 0, 255), (Characters.x, Characters.y, Characters.h, Characters.l)) 
     if game_state == "roulette":
