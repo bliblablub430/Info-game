@@ -10,7 +10,8 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
-ostblock.wallcreation()
+
+almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc], mapinteraction.almosteverything)
 
 # Player variables
 x, y = 700, 500
@@ -38,7 +39,7 @@ while running:
 
     # RUFE die rouletteloop auf und fange den neuen State auf
     if game_state == "normal":
-            x, y, dx, dy = mapinteraction.wallinteraction(x, y, dx, dy)
+            x, y, dx, dy = mapinteraction.wallinteraction(x, y, dx, dy, almosteverything) #Wall collition plus Character Movement
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             Characters.steps = Characters.npcmovement(Characters.npc, Characters.steps, Characters.npcspeed)
 
