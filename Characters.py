@@ -21,14 +21,19 @@ npc = pygame.Rect(xn, yn, hn, ln)
 pixles = []
 
 def movement(x, y, speed): #actuall movement happens in mapinteraction.wallinteraction
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LSHIFT]:
+        speedc = speed*2
+    else:
+        speedc = speed
     dx, dy = get_movement_vector() 
-    x += dx * speed
+    x += dx * speedc
     if __name__ == "__main__":
         character.x = x
-    y += dy * speed
+    y += dy * speedc
     if __name__ == "__main__":
         character.y = y
-    return x, y, (dx*speed), (dy*speed)
+    return x, y, (dx*speedc), (dy*speedc)
 
 def get_movement_vector():
     dx, dy = 0, 0  # Start with no movement
