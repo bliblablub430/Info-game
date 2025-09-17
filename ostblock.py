@@ -6,7 +6,7 @@ clock = pygame.time.Clock()
 # Map-Bild laden
 map_img = pygame.image.load("Lerbermatt_1.Version.png").convert()
 width, height = map_img.get_size()
-TILESIZE = 6
+TILESIZE = 15
 # Liste für Wände
 walls = []
 

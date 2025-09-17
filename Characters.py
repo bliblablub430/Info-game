@@ -1,5 +1,6 @@
 import pygame
 import ostblock
+import mapinteraction
 
 pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
@@ -8,7 +9,7 @@ clock = pygame.time.Clock()
 # Player variables
 x, y = 960, 540
 h, l = 50, 50
-speed = 5
+speed = 10
 character = pygame.Rect(x, y, h, l)
 
 xn, yn = 800, 600
@@ -80,7 +81,9 @@ def drawing(screen, character, npc, pixles):
 
 
 def draw(x,y):
-    return pygame.Rect(x, y, 50, 50)
+    pixle = pygame.Rect(x, y, 50, 50)
+    mapinteraction.add_to_almosteverything(pixle, mapinteraction.almosteverything)
+    return pixle
 
 if __name__ == "__main__":
 

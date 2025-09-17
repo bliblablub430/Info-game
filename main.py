@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
-almosteverything = mapinteraction.add_to_almosteverything(ostblock.wallcreation(), mapinteraction.almosteverything)
+almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc], mapinteraction.almosteverything)
 
 # Player variables
 x, y = 700, 500

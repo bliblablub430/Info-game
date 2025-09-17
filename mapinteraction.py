@@ -27,7 +27,7 @@ def moving_everythingy(dy, almosteverything):
 def add_to_almosteverything(object, almosteverything):
     if type(object) == list:
         for value in object:
-            almosteverything.append(value)
+            add_to_almosteverything(value, almosteverything)
     else:
          almosteverything.append(object)
     return almosteverything
