@@ -3,7 +3,7 @@ import pygame
 
 # Wallet (Währung) – speichert, wie viele Pixel du hast
 class PixelBank:
-    def __init__(self, start=0):
+    def __init__(self, start=10):
         self.amount = int(start)
 
     def add(self, n=1):  # Pixel hinzufügen
@@ -21,9 +21,11 @@ class PixelBank:
 
     def get(self):  # Anzahl Pixel abfragen
         return self.amount
+    
+wallet = PixelBank()
 
 # HUD: Anzeige oben rechts/links 
-def draw_pixels(surface, x, y, amount, size=16, gap=6):
+def menu(surface, x, y, amount, size=16, gap=6):
     # kleines "Pixel"-Icon (einfarbiges Quadrat)
     icon = pygame.Surface((size, size))
     icon.fill((120, 220, 255))  # hellblau = Pixel

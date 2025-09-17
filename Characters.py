@@ -1,6 +1,7 @@
 import pygame
 import ostblock
 import mapinteraction
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
@@ -22,7 +23,7 @@ pixles = []
 
 def movement(x, y, speed): #actuall movement happens in mapinteraction.wallinteraction
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LSHIFT]:
+    if keys[pygame.K_RSHIFT]:
         speedc = speed*2
     else:
         speedc = speed
@@ -72,23 +73,31 @@ def npcmovement(npc, steps, npcspeed):
     steps += 1
     return steps
 
-def drawing(screen, character, npc, pixles):
+def drawing(screen, character, npc, pixles, last_pixel):
      #check for drawing a pixel
+    current_time = pygame.time.get_ticks()
+    pixel_coolown = 105
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_j]:
-        pixles.append(draw(character.x, character.y))
+    if keys[pygame.K_j] and current_time - last_pixel > pixel_coolown:
+        pixle = draw(character.x, character.y)
+        if pixle is not None:
+            pixles.append(pixle)
+            last_pixel = current_time
     #Drawing everything
     ostblock.walldraw(screen) #Draw wall
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
     pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
     for p in pixles:
         pygame.draw.rect(screen, (0, 255, 0), (p)) #Draw pixles
+    return last_pixel
 
 
 def draw(x,y):
-    pixle = pygame.Rect(x, y, 50, 50)
-    mapinteraction.add_to_almosteverything(pixle, mapinteraction.almosteverything)
-    return pixle
+    if Pixel_Währung_und_Sammlung.wallet.can_spend(1):
+        pixle = pygame.Rect(x, y, 50, 50)
+        mapinteraction.add_to_almosteverything(pixle, mapinteraction.almosteverything)
+        Pixel_Währung_und_Sammlung.wallet.spend(1)
+        return pixle
 
 if __name__ == "__main__":
 

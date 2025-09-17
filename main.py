@@ -11,7 +11,10 @@ screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
+#For movement
 almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc], mapinteraction.almosteverything)
+
+last_pixel = 0
 
 # Player variables
 x, y = 700, 500
@@ -33,7 +36,7 @@ while running:
         if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-        
+
         # Events an die Funktionen übergeben, die sie brauchen
         game_state = Gambling.escaperoulette(game_state, event)
 
@@ -49,7 +52,7 @@ while running:
     # --- ZEICHNEN ---
     screen.fill((255, 255, 255)) # Hintergrund
     pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
-    Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles) 
+    last_pixel = Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles, last_pixel) 
     if game_state == "roulette":
         Gambling.roulettespiel_zeichnen(current_state, screen)
     pygame.display.update()
