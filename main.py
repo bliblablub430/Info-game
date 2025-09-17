@@ -1,10 +1,12 @@
 import pygame
 import Gambling
 import Characters
+import musik
 
 pygame.init()
+pygame.mixer.init()
 screen = pygame.display.set_mode((1920, 1080))
-pygame.display.set_caption("Frau_Weidman_Hunter69")
+pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
 # Player variables
@@ -13,6 +15,7 @@ x, y = 700, 500
 running = True
 game_state = "normal" # Die EINZIGE game_state Variable
 current_state = "waiting_for_bet" # für Roulette
+musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
 
 while running:
     
