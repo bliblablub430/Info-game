@@ -4,9 +4,9 @@ pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
 clock = pygame.time.Clock()
 # Map-Bild laden
-map_img = pygame.image.load("Lerbermatt_Ostblock_2.png").convert()
+map_img = pygame.image.load("Lerbermatt_1.Version.png").convert()
 width, height = map_img.get_size()
-TILESIZE = 4
+TILESIZE = 6
 # Liste für Wände
 walls = []
 
@@ -24,6 +24,7 @@ def wallcreation():
                 walls.append(rect)
             elif color == (255, 255, 255):  # Weiß = Boden
                 pass  # Boden, nichts zu tun
+    return walls
 
 def walldraw(screen):
     for wall in walls:

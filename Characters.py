@@ -6,7 +6,7 @@ pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
 # Player variables
-x, y = 700, 500
+x, y = 960, 540
 h, l = 50, 50
 speed = 5
 character = pygame.Rect(x, y, h, l)
@@ -19,10 +19,14 @@ npc = pygame.Rect(xn, yn, hn, ln)
 
 pixles = []
 
-def movement(x, y, speed):
+def movement(x, y, speed): #actuall movement happens in mapinteraction.wallinteraction
     dx, dy = get_movement_vector() 
     x += dx * speed
+    if __name__ == "__main__":
+        character.x = x
     y += dy * speed
+    if __name__ == "__main__":
+        character.y = y
     return x, y, (dx*speed), (dy*speed)
 
 def get_movement_vector():
@@ -30,13 +34,13 @@ def get_movement_vector():
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_d]:
-        dx += 1
-    if keys[pygame.K_a]:
         dx -= 1
+    if keys[pygame.K_a]:
+        dx += 1
     if keys[pygame.K_w]:
-        dy -= 1
-    if keys[pygame.K_s]:
         dy += 1
+    if keys[pygame.K_s]:
+        dy -= 1
         
 
     # Normalize the vector (so diagonal movement isn't faster)
@@ -92,7 +96,7 @@ if __name__ == "__main__":
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
-        x, y = movement(x, y, speed)
+        x, y, dx, dy = movement(x, y, speed)
         steps = npcmovement(npc, steps, npcspeed)
         screen.fill((0, 0, 0)) # Clear screen
         drawing(screen, character, npc, pixles)
