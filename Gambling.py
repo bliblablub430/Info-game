@@ -32,21 +32,13 @@ def escaperoulette(game_state, event):
 
 def rouletteloop(game_state, current_state, events):
     if game_state == "normal":
-        dx, dy = Characters.get_movement_vector()
-        Characters.x += dx * Characters.speed
-        Characters.y += dy * Characters.speed
-        
         # --- KOLLISIONS-CHECK ---
         # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
-        aktuelles_spieler_rect = pygame.Rect(Characters.x, Characters.y, Characters.h, Characters.l)
-        if aktuelles_spieler_rect.colliderect(roulette_trigger_zone):
+        if Characters.character.colliderect(roulette_trigger_zone):
             # !! TRIGGER !!
             # Der Spieler hat die Zone betreten. Wechsle den Zustand.
             game_state = "roulette"
             current_state = "waiting_for_bet"
-
-    elif game_state == "roulette":
-        current_state = roulettespiel_logik(current_state, events)
     return game_state, current_state
 
 def roulettespiel_logik(current_state, events):

@@ -67,14 +67,12 @@ def drawing(screen, character, npc, pixles):
      #check for drawing a pixel
     keys = pygame.key.get_pressed()
     if keys[pygame.K_j]:
-        pixles.append(draw(x, y))
+        pixles.append(draw(character.x, character.y))
     #Drawing everything
-    screen.fill((0, 0, 0)) # Clear screen
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
     pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
     for p in pixles:
         pygame.draw.rect(screen, (0, 255, 0), (p))
-    pygame.display.update() # Update the display
 
 
 def draw(x,y):
@@ -94,7 +92,7 @@ if __name__ == "__main__":
         x, y = movement(x, y, speed)
         steps = npcmovement(npc, steps, npcspeed)
         drawing(screen, character, npc, pixles)
-
+        pygame.display.update()
         clock.tick(60)
-
+        
     pygame.quit() # Quit pygame properly
