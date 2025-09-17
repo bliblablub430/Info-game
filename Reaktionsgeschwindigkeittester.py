@@ -105,7 +105,7 @@ def Reaktionsgeschwindigkeittester():
             ergebnis_surface = font.render(ergebnis_text, True, RED)
             screen.blit(ergebnis_surface, (20, 220))
 
-        pygame.display.flip()#Aktualisiert den gesamten Bildschirm, sodass alle neu gezeichneten Elemente sichtbar werden.
+        pygame.display.flip() #Aktualisiert den gesamten Bildschirm, sodass alle neu gezeichneten Elemente sichtbar werden.
         clock.tick(60)
     pygame.quit()
 

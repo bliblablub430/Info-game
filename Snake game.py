@@ -80,7 +80,6 @@ while True:
         new_head[1] < 0 or new_head[1] >= HEIGHT or
         new_head in snake[1:]
     ):
-        verloren()
         
 
     # Zeichnen

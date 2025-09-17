@@ -35,6 +35,6 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    screen.fill((0, 0, 0))         # Hintergrund schwarz
-    draw_pixelfeld(pixel)          # Pixelfeld zeichnen
-    pygame.display.flip()          # Fenster aktualisieren
+    screen.fill((0, 0, 0))# Hintergrund schwarz
+    draw_pixelfeld(pixel)# Pixelfeld zeichnen
+    pygame.display.flip()# Fenster aktualisieren
