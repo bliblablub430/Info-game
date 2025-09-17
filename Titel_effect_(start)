@@ -1,3 +1,5 @@
+import pygame
+
 def show_game_title_fade(screen, title="INFO-GAME", duration=3):
     font = pygame.font.Font(None, 72)
     text = font.render(title, True, (255, 255, 255))
