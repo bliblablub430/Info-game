@@ -31,7 +31,7 @@ frau_weidmann = sprites.Sprites("Vampir\Silke_1.png", pygame.Rect(xw, yw, hw, lw
 xp, yp = 100, 800
 hp, lp = 40, 50
 stepsp = 350
-npcspeedp = 2
+npcspeedp = 20
 pharao = sprites.Sprites("Pharao\Pharao_1.png", pygame.Rect(xp, yp, hp, lp))
 #alle npcs
 npcs = [frau_weidmann, pharao]
