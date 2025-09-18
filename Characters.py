@@ -10,6 +10,9 @@ pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
+farben = ["R", "Gr", "B", "G", "P"]  # Farbe pro Pixeltyp
+aktuelle_farbe = 0
+
 # Player sprite
 x, y = 960, 540
 h, l = 40, 50
@@ -34,6 +37,11 @@ pharao = sprites.Sprites("Renzo_1.png", pygame.Rect(xp, yp, hp, lp))
 npcs = [frau_weidmann, pharao]
 
 pixles = []
+pixles_R = []
+pixles_Gr = []
+pixles_B = []
+pixles_G = []
+pixles_P = []
 
 def movement(x, y, speed, sprint_unlocked): #actuall movement happens in mapinteraction.wallinteraction
     keys = pygame.key.get_pressed()
@@ -127,10 +135,27 @@ def drawing(screen, character, npcs, pixles, last_pixel, last_renzo):
     current_time = pygame.time.get_ticks()
     pixel_coolown = 105
     keys = pygame.key.get_pressed()
+    global aktuelle_farbe
+
+    if keys[pygame.K_TAB]:
+        aktuelle_farbe = (aktuelle_farbe + 1) % len(farben)
+
     if keys[pygame.K_j] and current_time - last_pixel > pixel_coolown:
         pixle = draw(character.rect.x, character.rect.y)
         if pixle is not None:
-            pixles.append(pixle)
+            if farben[aktuelle_farbe] == "R":
+                pixles_R.append(pixle)
+            elif farben[aktuelle_farbe] == "Gr":
+                pixles_Gr.append(pixle)
+            elif farben[aktuelle_farbe] == "B":
+                pixles_B.append(pixle)
+            elif farben[aktuelle_farbe] == "G":
+                pixles_G.append(pixle)
+            elif farben[aktuelle_farbe] == "P":
+                pixles_P.append(pixle)
+            else:
+                pixles.append(pixle)
+
             last_pixel = current_time
     #Drawing everything
     ostblock.walldraw(screen) #Draw wall
@@ -161,8 +186,25 @@ def drawing(screen, character, npcs, pixles, last_pixel, last_renzo):
         screen.blit(character.image, character.rect) # Draw player sprite
     for npc in npcs:
         screen.blit(npc.image, npc.rect) # Draw NPC sprite(s)
+
+    for p in pixles_R:
+        pygame.draw.rect(screen, (250, 0, 0), p)
+
+    for p in pixles_Gr:
+        pygame.draw.rect(screen, (0, 250, 0), p)
+
+    for p in pixles_B:
+        pygame.draw.rect(screen, (0, 0, 250), p)
+
+    for p in pixles_G:
+        pygame.draw.rect(screen, (255, 255, 0), p)
+
+    for p in pixles_P:
+        pygame.draw.rect(screen, (255, 51, 255), p)
+
     for p in pixles:
-        pygame.draw.rect(screen, (0, 255, 0), (p)) #Draw pixles
+        pygame.draw.rect(screen, (0, 255, 0), p)
+
     return last_pixel, last_renzo
 
 
