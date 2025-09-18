@@ -6,6 +6,7 @@ import ostblock
 import mapinteraction
 import Slots
 import black_jack
+import herz_system
 
 pygame.init()
 pygame.mixer.init()
@@ -13,14 +14,12 @@ screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
-<<<<<<< HEAD
-#For movement
-almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc], mapinteraction.almosteverything)
-=======
-almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone], mapinteraction.almosteverything)
->>>>>>> db9c9f58e496fdec8b059e4615d24d2f88623f64
+almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npcs, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone], mapinteraction.almosteverything)
 
 last_pixel = 0
+last_interaction = 0
+
+lives = 3
 
 # Player variables
 x, y = 700, 500
@@ -56,7 +55,8 @@ while running:
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             game_state,slots_state = Slots.slotloop(game_state,slots_state, events)
             game_state,bj_state = black_jack.blackjackloop(game_state, bj_state, events)
-            Characters.steps = Characters.npcmovement(Characters.npc, Characters.steps, Characters.npcspeed)
+            Characters.steps = Characters.npcmovement(Characters.npcs, Characters.steps, Characters.npcspeed)
+            lives, last_interaction = Characters.npcinteraction(lives, last_interaction)
 
     elif game_state == "roulette":
          current_state = Gambling.roulettespiel_logik(current_state, events)
@@ -70,13 +70,10 @@ while running:
     # --- ZEICHNEN ---
     screen.fill((255, 255, 255)) # Hintergrund
     pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
-<<<<<<< HEAD
-    last_pixel = Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles, last_pixel) 
-=======
+    last_pixel = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel) 
+    lives = herz_system.draw_lives(screen, lives)
     pygame.draw.rect(screen,(255,0,0),Slots.slot_trigger_zone)
     pygame.draw.rect(screen,(255,0,0),black_jack.blackjack_trigger_zone)
-    Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles) 
->>>>>>> db9c9f58e496fdec8b059e4615d24d2f88623f64
     if game_state == "roulette":
         Gambling.roulettespiel_zeichnen(current_state, screen)
     elif game_state == "slot":
