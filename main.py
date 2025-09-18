@@ -20,7 +20,7 @@ clock = pygame.time.Clock()
 almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npcs, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone, ostblock.map_imgsp], mapinteraction.almosteverything)
 
 last_pixel = 0
-last_renzo = "Renzo\Renzo_1.png"
+last_renzo = "Renzo/Renzo_1.png"
 last_interaction = 0
 
 lives = 3
