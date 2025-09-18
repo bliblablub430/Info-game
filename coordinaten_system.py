@@ -1,21 +1,28 @@
 import pygame
 
-def draw_coords(surface, rect):
-    """Zeigt die Koordinaten eines Rects unten links an."""
-    font = pygame.font.Font(None, 20)
-    color = (255, 255, 255)
-    bg_color = (0, 0, 0, 120)
-    pad = 6
+surface = pygame.display.set_mode((1920, 1080))
 
-    text = f"xc: {int(rect.x)}  yc: {int(rect.y)}"
-    txt = font.render(text, True, color)
-    rect_txt = txt.get_rect()
-    rect_txt.bottomleft = (0, surface.get_height())
+def draw_coords(surface, rect_to_track, font_size=24, padding=5):
+    """
+    Zeichnet ein sauberes Koordinaten-HUD unten links auf den Bildschirm.
+    """
+    # 1. Text vorbereiten
+    font = pygame.font.Font(None, font_size)
+    text_string = f"X: {int(rect_to_track.x)} | Y: {int(rect_to_track.y)}"
+    text_surface = font.render(text_string, True, (255, 255, 255))
+    text_rect = text_surface.get_rect()
 
-    bg_rect = pygame.Rect(0, 0, rect_txt.width + pad * 2, rect_txt.height + pad * 2)
-    bg_rect.bottomleft = (rect_txt.left - pad, rect_txt.bottom + pad)
-    bg_surf = pygame.Surface(bg_rect.size, pygame.SRCALPHA)
-    bg_surf.fill(bg_color)
-    surface.blit(bg_surf, bg_rect.topleft)
+    # 2. Hintergrund-Rechteck erstellen
+    bg_width = text_rect.width + padding * 2
+    bg_height = text_rect.height + padding * 2
+    bg_rect = pygame.Rect(0, 0, bg_width, bg_height) # Zuerst bei (0,0) erstellen
 
-    surface.blit(txt, rect_txt.topleft)
+    # 3. Hintergrund an der unteren linken Ecke des Bildschirms ausrichten
+    bg_rect.bottomleft = (220, 1000)
+
+    # 4. Text im Hintergrund zentrieren
+    text_rect.center = bg_rect.center
+
+    # 5. Alles zeichnen
+    pygame.draw.rect(surface, (20, 20, 20), bg_rect) # Hintergrund
+    surface.blit(text_surface, text_rect)           # Text
