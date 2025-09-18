@@ -9,7 +9,7 @@ screen = pygame.display.set_mode((1920, 1080))
 minecraftfont = pygame.font.Font("assets/Fonts/minedings.ttf", 50)
 font_medium = pygame.font.SysFont('Arial', 30)
 
-slot_X = 200
+slot_X = 100
 slot_Y = 200
 slot_Breite = 50
 slot_Höhe = 50
@@ -18,7 +18,6 @@ slot_trigger_zone = pygame.Rect(slot_X, slot_Y, slot_Breite, slot_Höhe)
 slotliste = ["I","I","I","I","I","I","I","I","I","A","A","A","A","A","A","T","T","T"]
 Ergebnisliste = []
 Mitteilung = ""
-slots_state = "auf_Start_warten"
 
 def escapeslot(game_state, event):
     global Ergebnisliste, Mitteilung
@@ -76,41 +75,28 @@ def ergebnisseslot(slots_state, events):
 def slotszeichnen(screen, slots_state, Ergebnisliste, Mitteilung):
     # Zustand 1: Warten auf den Start des Spiels
     if slots_state == "auf_Start_warten":
-        text1 = font_medium.render("SLOT MASCHINE", True, (255, 255, 0))
-        text2 = font_medium.render("Drücke [Y] zum Starten", True, (255, 255, 255))
+        text1 = font_medium.render("SLOT MASCHINE", True, (0, 0, 0))
+        text2 = font_medium.render("Drücke [Y] zum Starten", True, (0, 0, 0))
         screen.blit(text1, (850, 400))
         screen.blit(text2, (830, 450))
 
     # Zustand 2: "Drehung" (wird sehr schnell übersprungen)
     elif slots_state == "viel_Glück":
-        text1 = font_medium.render("...Walzen drehen sich...", True, (255, 255, 0))
+        text1 = font_medium.render("...Walzen drehen sich...", True, (0, 0, 0))
         screen.blit(text1, (800, 450))
 
     # Zustand 3: Ergebnis anzeigen
     elif slots_state == "Ergebnisse":
         # Die Symbole aus der Ergebnisliste mit der Minedings-Schriftart zeichnen
         ergebnis_string = " ".join(Ergebnisliste) # Macht z.B. "A I T" aus ['A', 'I', 'T']
-        symbol_text = minecraftfont.render(ergebnis_string, True, (255, 255, 255))
+        symbol_text = minecraftfont.render(ergebnis_string, True, (0, 0, 0))
         
         # Die Gewinn/Verlust-Mitteilung zeichnen
-        mitteilung_text = font_medium.render(Mitteilung, True, (255, 255, 0))
+        mitteilung_text = font_medium.render(Mitteilung, True, (0, 0, 0))
         
         # Anweisung zum Weiterspielen
-        weiter_text = font_medium.render("Drücke [LEERTASTE] zum Weiterspielen", True, (200, 200, 200))
+        weiter_text = font_medium.render("Drücke [LEERTASTE] zum Weiterspielen", True, (0, 0, 0))
 
         screen.blit(symbol_text, (880, 400))
         screen.blit(mitteilung_text, (820, 500))
         screen.blit(weiter_text, (750, 550))
-
-
-
-if __name__ == "__main__":
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        screen.fill((255, 255, 255))
-        screen.blit(text1, (500, 500))
-        pygame.display.update()
-    pygame.quit()
