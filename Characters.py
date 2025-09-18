@@ -4,6 +4,7 @@ import mapinteraction
 import Pixel_Währung_und_Sammlung
 import herz_system
 import sprites
+import random
 import shop_system
 
 pygame.init()
@@ -14,7 +15,8 @@ clock = pygame.time.Clock()
 x, y = 960, 540
 h, l = 40, 50
 speed = 10
-character = sprites.Sprites("Renzo_1.png", pygame.Rect(x, y, h, l))
+renzodef = "Renzo\Renzo_1.png"
+character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
 
 # NPC sprite(s)
 xn, yn = 800, 600
@@ -94,7 +96,7 @@ def npcinteraction(lives, last_interaction):
 
 
 
-def drawing(screen, character, npcs, pixles, last_pixel):
+def drawing(screen, character, npcs, pixles, last_pixel, last_renzo):
     #check for drawing a pixel
     current_time = pygame.time.get_ticks()
     pixel_coolown = 105
@@ -106,12 +108,36 @@ def drawing(screen, character, npcs, pixles, last_pixel):
             last_pixel = current_time
     #Drawing everything
     ostblock.walldraw(screen) #Draw wall
-    screen.blit(character.image, character.rect) # Draw player sprite
+    dx, dy = get_movement_vector()
+    renzo = ["Renzo\Renzo_1.png", "Renzo\Renzo_2.png", "Renzo\Renzo_3.png", "Renzo\Renzo_4.png", "Renzo\Renzo_5.png", "Renzo\Renzo_6.png", "Renzo\Renzo_7.png", "Renzo\Renzo_8.png", "Renzo\Renzo_9.png", "Renzo\Renzo_10.png", "Renzo\Renzo_11.png", "Renzo\Renzo_12.png", ]
+    if dy < 0:
+        renzodef = random.choice(renzo[0:3])
+        character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
+        screen.blit(character.image, character.rect) # Draw player sprite
+        last_renzo = renzodef
+    elif dy > 0:
+        renzodef = random.choice(renzo[3:6])
+        character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
+        screen.blit(character.image, character.rect) # Draw player sprite
+        last_renzo = renzodef
+    elif dx < 0:
+        renzodef = random.choice(renzo[6:9])
+        character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
+        screen.blit(character.image, character.rect) # Draw player sprite
+        last_renzo = renzodef
+    elif dx > 0:
+        renzodef = random.choice(renzo[9:12])
+        character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
+        screen.blit(character.image, character.rect) # Draw player sprite
+        last_renzo = renzodef
+    else:
+        character = sprites.Sprites(last_renzo, pygame.Rect(x, y, h, l))
+        screen.blit(character.image, character.rect) # Draw player sprite
     for npc in npcs:
         screen.blit(npc.image, npc.rect) # Draw NPC sprite(s)
     for p in pixles:
         pygame.draw.rect(screen, (0, 255, 0), (p)) #Draw pixles
-    return last_pixel
+    return last_pixel, last_renzo
 
 
 def draw(x,y):
