@@ -12,13 +12,13 @@ clock = pygame.time.Clock()
 
 # Player sprite
 x, y = 960, 540
-h, l = 50, 50
+h, l = 40, 50
 speed = 10
 character = sprites.Sprites("Renzo_1.png", pygame.Rect(x, y, h, l))
 
 # NPC sprite(s)
 xn, yn = 800, 600
-hn, ln = 50, 50
+hn, ln = 40, 50
 steps = 0
 npcspeed = 5
 frau_weidmann = sprites.Sprites("Renzo_1.png", pygame.Rect(xn, yn, hn, ln))
