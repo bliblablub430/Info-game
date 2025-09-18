@@ -5,7 +5,7 @@ import ostblock
 almosteverything = []
 
 
-def wallinteraction(x, y, dx, dy, almosteverything):
+def wallinteraction(x, y, dx, dy, almosteverything, sprint_unlocked):
     moving_everythingx(dx, almosteverything)
     for wall in ostblock.walls:
         if Characters.character.rect.colliderect(wall):
@@ -14,7 +14,7 @@ def wallinteraction(x, y, dx, dy, almosteverything):
     for wall in ostblock.walls:
         if Characters.character.rect.colliderect(wall):
             moving_everythingy(-dy, almosteverything)
-    x, y, dx, dy = Characters.movement(x, y, Characters.speed, True)
+    x, y, dx, dy = Characters.movement(x, y, Characters.speed, sprint_unlocked)
     return x, y, dx, dy
 
 def moving_everythingx(dx, almosteverything):

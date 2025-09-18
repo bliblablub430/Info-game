@@ -9,6 +9,7 @@ import black_jack
 import herz_system
 import Pixel_Währung_und_Sammlung
 import coordinaten_system
+import shop_system
 
 pygame.init()
 pygame.mixer.init()
@@ -28,6 +29,7 @@ x, y = 700, 500
 dx, dy = 0, 0
 
 running = True
+sprint_unlocked = False
 game_state = "normal" # Die EINZIGE game_state Variable
 current_state = "waiting_for_bet" # für Roulette
 slots_state = "auf_Start_warten" # für Slots
@@ -45,6 +47,16 @@ while running:
         if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+                if event.key == pygame.K_p and game_state == "normal":
+                    shop_system.shop.toggle()
+        if shop_system.shop.open:
+            lives, sprint_unlocked, shop_message = shop_system.shop.handle_event(
+                event,
+                Pixel_Währung_und_Sammlung.wallet,
+                lives,
+                shop_system.max_lives,
+                sprint_unlocked
+            )
 
         # Events an die Funktionen übergeben, die sie brauchen
         game_state = Gambling.escaperoulette(game_state, event)
@@ -53,7 +65,7 @@ while running:
 
     # RUFE die rouletteloop auf und fange den neuen State auf
      if game_state == "normal":
-            x, y, dx, dy = mapinteraction.wallinteraction(x, y, dx, dy, almosteverything) #Wall collition plus Character Movement
+            x, y, dx, dy = mapinteraction.wallinteraction(x, y, dx, dy, almosteverything, sprint_unlocked) #Wall collition plus Character Movement
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             game_state,slots_state = Slots.slotloop(game_state,slots_state, events)
             game_state,bj_state = black_jack.blackjackloop(game_state, bj_state, events)
@@ -78,7 +90,9 @@ while running:
      pygame.draw.rect(screen, (255, 0, 0), Slots.slot_trigger_zone)
      pygame.draw.rect(screen, (255, 0, 0), black_jack.blackjack_trigger_zone)
      Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
+     shop_system.draw_shop_icon(shop_system.surface, shop_system.sx, shop_system.sy, size = 200)
      coordinaten_system.draw_coords(coordinaten_system.surface, Characters.character.rect, font_size=24, padding=5)
+     shop_system.shop.draw(screen, Pixel_Währung_und_Sammlung.wallet)
      if game_state == "roulette":
           Gambling.roulettespiel_zeichnen(current_state, screen)
      elif game_state == "slot":

@@ -215,7 +215,7 @@ def roulettespiel_logik(current_state, events):
                     return "waiting_for_number_input2"
                 
     if Pixel_Währung_und_Sammlung.wallet.get() == 0:
-        game_state = "normmal"
+        game_state = "normal"
         return game_state
     
     return current_state 
