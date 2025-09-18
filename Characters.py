@@ -26,14 +26,13 @@ xw, yw = 800, 600
 hw, lw = 40, 50
 stepsw = 0
 npcspeedw = 20
-frau_weidmann_def = "Vampir\Silke_1.png"
-frau_weidmann = sprites.Sprites(frau_weidmann_def, pygame.Rect(xw, yw, hw, lw))
+frau_weidmann = sprites.Sprites("Vampir\Silke_1.png", pygame.Rect(xw, yw, hw, lw))
 #Pharao
 xp, yp = 100, 800
 hp, lp = 40, 50
 stepsp = 350
 npcspeedp = 2
-pharao = sprites.Sprites("Renzo_1.png", pygame.Rect(xp, yp, hp, lp))
+pharao = sprites.Sprites("Pharao\Pharao_1.png", pygame.Rect(xp, yp, hp, lp))
 #alle npcs
 npcs = [frau_weidmann, pharao]
 
@@ -131,35 +130,35 @@ def npcmovement(npcs, stepsw, npcspeedw, stepsp, npcspeedp):
             stepsw += 1
         elif npc == pharao:
             # npc läuft Dreieck ab
-            if stepsp < 50:
+            if stepsp < 500:
                 npc.rect.x += npcspeedp  # nach rechts
                 xp = npc.rect.x
                 yp = npc.rect.y
-            elif stepsp < 100:
+            elif stepsp < 1000:
                 npc.rect.y += npcspeedp  # nach unten
                 xp = npc.rect.x
                 yp = npc.rect.y
-            elif stepsp < 150:
+            elif stepsp < 1500:
                 npc.rect.x -= npcspeedp  # nach links
                 xp = npc.rect.x
                 yp = npc.rect.y
-            elif stepsp < 200:
+            elif stepsp < 2000:
                 npc.rect.y += npcspeedp  # nach unten
                 xp = npc.rect.x
                 yp = npc.rect.y
-            elif stepsp < 250:
+            elif stepsp < 2500:
                 npc.rect.x -= npcspeedp  # nach links
                 xp = npc.rect.x
                 yp = npc.rect.y
-            elif stepsp < 300:
+            elif stepsp < 3000:
                 npc.rect.y -= npcspeedp  # nach oben
                 xp = npc.rect.x
                 yp = npc.rect.y
-            elif stepsp < 350:
-                npc.rect.y += npcspeedp  # nach oben  
+            elif stepsp < 3500:
+                npc.rect.y += npcspeedp  # nach unten  
                 xp = npc.rect.x
                 yp = npc.rect.y
-            if stepsp >= 350:
+            if stepsp >= 3500:
                 stepsp = 0
             stepsp += 1
     return stepsw, stepsp, xw, yw, xp, yp
@@ -298,7 +297,74 @@ def drawing(screen, character, npcs, pixles, last_pixel, last_renzo, stepsw, ste
     elif stepsw >= 3000:
         stepsw = 0
     stepsw += 1
-    
+    #pharao
+    zady = ["Pharao\Pharao_1.png", "Pharao\Pharao_2.png", "Pharao\Pharao_3.png", "Pharao\Pharao_4.png", "Pharao\Pharao_5.png", "Pharao\Pharao_6.png", "Pharao\Pharao_7.png", "Pharao\Pharao_8.png", "Pharao\Pharao_9.png", "Pharao\Pharao_10.png", ]
+    if stepsp < 500:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[8], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        else:
+            pharao = sprites.Sprites(zady[9], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach rechts
+    elif stepsp < 1000:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[3], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        elif stepsp % 3 == 0:
+            pharao = sprites.Sprites(zady[4], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        else:
+            pharao = sprites.Sprites(zady[5], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach unten
+    elif stepsp < 1500:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[6], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        else:
+            pharao = sprites.Sprites(zady[7], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach links
+    elif stepsp < 2000:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[3], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        elif stepsp % 3 == 0:
+            pharao = sprites.Sprites(zady[4], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        else:
+            pharao = sprites.Sprites(zady[5], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach unten
+    elif stepsp < 2500:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[6], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach links
+        else:
+            pharao = sprites.Sprites(zady[7], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+    elif stepsp < 3000:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[0], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        elif stepsp % 3 == 0:
+            pharao = sprites.Sprites(zady[1], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        else:
+            pharao = sprites.Sprites(zady[2], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach oben
+    elif stepsp < 3500:
+        if stepsp % 5 == 0: #alle fünf frames
+            pharao = sprites.Sprites(zady[3], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        elif stepsp % 3 == 0:
+            pharao = sprites.Sprites(zady[4], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect)
+        else:
+            pharao = sprites.Sprites(zady[5], pygame.Rect(xp, yp, hp, lp))
+            screen.blit(pharao.image, pharao.rect) #nach unten
+    if stepsp >= 3500:
+        stepsp = 0
+    stepsp += 1    
+
+
     for p in pixles_R:
         pygame.draw.rect(screen, (250, 0, 0), p)
 
