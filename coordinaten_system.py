@@ -1,4 +1,3 @@
-# coordinaten_system.py
 import pygame
 
 surface = pygame.display.set_mode((1920, 1080))
