@@ -1,6 +1,7 @@
 import pygame
 import random
 import Characters
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.Rect
@@ -31,19 +32,26 @@ def slotloop(game_state, slot_state, events):
     if game_state == "normal":
         # --- KOLLISIONS-CHECK ---
         if Characters.character.colliderect(slot_trigger_zone): #Trigger
-            game_state = "slot"
-            slot_state = "auf_Start_warten"
+                if Pixel_Währung_und_Sammlung.wallet.get() < 50:
+                    game_state = "normal"
+                else:
+                    game_state = "slot"
+                    slot_state = "auf_Start_warten"
     return game_state, slot_state
 
 def ergebnisseslot(slots_state, events):
     # Diese globalen Variablen müssen deklariert werden, damit die Funktion sie ändern kann.
     global Ergebnisliste, Mitteilung
 
+    if Pixel_Währung_und_Sammlung.wallet.get() < 50:
+        game_state = "normal"
+        return game_state
+
     if slots_state == "auf_Start_warten":
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_y:
-                    # Die Ergebnisliste HIER zurücksetzen, vor jeder neuen Runde.
+                    Pixel_Währung_und_Sammlung.wallet.spend(50)
                     Ergebnisliste = []
                     return "viel_Glück" # Zustand ändern und zurückgeben
             
@@ -55,10 +63,13 @@ def ergebnisseslot(slots_state, events):
 
         if a == "T" and b == "T" and c == "T":
             Mitteilung = "BOOM Hauptgewinn"
+            Pixel_Währung_und_Sammlung.wallet.add(1000)
         elif a == "A" and b == "A" and c == "A":
             Mitteilung = "Hoher Gewinn"
+            Pixel_Währung_und_Sammlung.wallet.add(500)
         elif a == "I" and b == "I" and c == "I":
             Mitteilung = "Normaler Gewinn"
+            Pixel_Währung_und_Sammlung.wallet.add(250)
         else:
             Mitteilung = "Verloren du Opfer"
             
@@ -76,7 +87,7 @@ def slotszeichnen(screen, slots_state, Ergebnisliste, Mitteilung):
     # Zustand 1: Warten auf den Start des Spiels
     if slots_state == "auf_Start_warten":
         text1 = font_medium.render("SLOT MASCHINE", True, (0, 0, 0))
-        text2 = font_medium.render("Drücke [Y] zum Starten", True, (0, 0, 0))
+        text2 = font_medium.render("Zahle 50 Pixel, [Y] zum Starten", True, (0, 0, 0))
         screen.blit(text1, (850, 400))
         screen.blit(text2, (830, 450))
 

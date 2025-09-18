@@ -1,14 +1,13 @@
 # Pixel-Währung + Sammeln + HUD
 import pygame
 
-amount = 10
 surface = pygame.display.set_mode((150, 100))
 hudx = 250
 hudy = 100
 
 # Wallet (Währung) – speichert, wie viele Pixel du hast
 class PixelBank:
-    def __init__(self, start=10):
+    def __init__(self, start=50):
         self.amount = int(start)
 
     def add(self, n=1):  # Pixel hinzufügen

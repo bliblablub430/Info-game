@@ -7,6 +7,7 @@ import mapinteraction
 import Slots
 import black_jack
 import Pixel_Währung_und_Sammlung
+import coordinaten_system
 
 pygame.init()
 pygame.mixer.init()
@@ -70,6 +71,7 @@ while running:
     pygame.draw.rect(screen,(255,0,0),Slots.slot_trigger_zone)
     pygame.draw.rect(screen,(255,0,0),black_jack.blackjack_trigger_zone)
     Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
+    coordinaten_system.draw_coords(coordinaten_system.surface, Characters.character, font_size=24, padding=5)
     if game_state == "roulette":
         Gambling.roulettespiel_zeichnen(current_state, screen)
     elif game_state == "slot":
