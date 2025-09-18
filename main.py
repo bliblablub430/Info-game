@@ -7,6 +7,7 @@ import mapinteraction
 import Slots
 import black_jack
 import herz_system
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.mixer.init()
@@ -74,6 +75,7 @@ while running:
     lives = herz_system.draw_lives(screen, lives)
     pygame.draw.rect(screen,(255,0,0),Slots.slot_trigger_zone)
     pygame.draw.rect(screen,(255,0,0),black_jack.blackjack_trigger_zone)
+    
     if game_state == "roulette":
         Gambling.roulettespiel_zeichnen(current_state, screen)
     elif game_state == "slot":
