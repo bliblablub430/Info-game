@@ -1,0 +1,84 @@
+# coordinaten_system — kleines Overlay unten links (Pygame)
+# Zeigt Koordinaten als Text, kein print(), nur Fonts/Blit.
+# Nutzung:
+#   import coordinaten_system as cs
+#   cs.init_coords(size=20)  # optional
+#   ... in der Game-Loop ...
+#   cs.draw_coords(screen, (player.x, player.y))
+#   # oder direkt mit einem Rect:
+#   cs.draw_coords_for_rect(screen, player)
+
+import pygame
+
+# Defaults (kannst du mit init_coords ändern)
+_FONT = None
+_COLOR = (255, 255, 255)
+_BG = (0, 0, 0, 120)  # halbtransparentes Schwarz fürs Label
+_PAD = 6  # Abstand innen
+
+
+def init_coords(font_path=None, size=20, color=(255, 255, 255), bg=(0, 0, 0, 120)):
+    """Setzt Schriftart, Größe, Farben fürs Overlay."""
+    global _FONT, _COLOR, _BG
+    if _FONT is None:
+        pygame.font.init()
+    _FONT = pygame.font.Font(font_path, size) if font_path else pygame.font.Font(None, size)
+    _COLOR = color
+    _BG = bg
+
+
+def _get_font():
+    global _FONT
+    if _FONT is None:
+        pygame.font.init()
+        _FONT = pygame.font.Font(None, 20)
+    return _FONT
+
+
+def draw_coords(surface, pos_xy, offset=(12, 12)):
+    """Zeigt Koordinaten unten links an.
+    surface: Zielsurface
+    pos_xy: (x, y)
+    offset: Abstand vom unteren linken Rand
+    """
+    font = _get_font()
+    x, y = pos_xy
+    text = f"x: {int(x)}  y: {int(y)}"
+    txt = font.render(text, True, _COLOR)
+    rect = txt.get_rect()
+    rect.bottomleft = (offset[0], surface.get_height() - offset[1])
+
+    if _BG is not None:
+        pad = _PAD
+        bg_rect = pygame.Rect(0, 0, rect.width + pad * 2, rect.height + pad * 2)
+        bg_rect.bottomleft = (rect.left - pad, rect.bottom + pad)
+        bg_surf = pygame.Surface(bg_rect.size, pygame.SRCALPHA)
+        bg_surf.fill(_BG)
+        surface.blit(bg_surf, bg_rect.topleft)
+
+    surface.blit(txt, rect.topleft)
+
+
+def draw_coords_for_rect(surface, rect, offset=(12, 12)):
+    """Wie draw_coords, aber direkt mit Rect."""
+    draw_coords(surface, (rect.x, rect.y), offset)
+
+
+# kleines Achsen-Overlay unten links (Deko/Debug)
+def draw_corner_axes(surface, origin_offset=(12, 52), size=28, axis_color=(150, 200, 255)):
+    """Zeichnet kleine XY-Achse unten links."""
+    w, h = surface.get_size()
+    ox = origin_offset[0]
+    oy = h - origin_offset[1]
+
+    # X-Achse
+    pygame.draw.line(surface, axis_color, (ox, oy), (ox + size, oy), 2)
+    # Y-Achse (nach oben)
+    pygame.draw.line(surface, axis_color, (ox, oy), (ox, oy - size), 2)
+    # Pfeile
+    pygame.draw.polygon(surface, axis_color, [(ox + size, oy), (ox + size - 6, oy - 4), (ox + size - 6, oy + 4)])
+    pygame.draw.polygon(surface, axis_color, [(ox, oy - size), (ox - 4, oy - size + 6), (ox + 4, oy - size + 6)])
+    # Labels
+    font = _get_font()
+    surface.blit(font.render("x", True, axis_color), (ox + size + 6, oy - 10))
+    surface.blit(font.render("y", True, axis_color), (ox - 10, oy - size - 16))
