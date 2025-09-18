@@ -70,7 +70,7 @@ while running:
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             game_state,slots_state = Slots.slotloop(game_state,slots_state, events)
             game_state,bj_state = black_jack.blackjackloop(game_state, bj_state, events)
-            Characters.steps = Characters.npcmovement(Characters.npcs, Characters.steps, Characters.npcspeed)
+            Characters.stepsw, Characters.stepsp = Characters.npcmovement(Characters.npcs, Characters.stepsw, Characters.npcspeedw, Characters.stepsp, Characters.npcspeedp)
             lives, last_interaction = Characters.npcinteraction(lives, last_interaction)
 
      elif game_state == "roulette":
