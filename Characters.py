@@ -5,7 +5,6 @@ import Pixel_Währung_und_Sammlung
 import herz_system
 import sprites
 import random
-import shop_system
 
 pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
@@ -19,12 +18,20 @@ renzodef = "Renzo\Renzo_1.png"
 character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
 
 # NPC sprite(s)
-xn, yn = 800, 600
-hn, ln = 40, 50
-steps = 0
-npcspeed = 5
-frau_weidmann = sprites.Sprites("Renzo_1.png", pygame.Rect(xn, yn, hn, ln))
-npcs = [frau_weidmann]
+#Frau Weidmann
+xw, yw = 800, 600
+hw, lw = 40, 50
+stepsw = 0
+npcspeedw = 5
+frau_weidmann = sprites.Sprites("Renzo_1.png", pygame.Rect(xw, yw, hw, lw))
+#Pharao
+xp, yp = 100, 800
+hp, lp = 40, 50
+stepsp = 350
+npcspeedp = 2
+pharao = sprites.Sprites("Renzo_1.png", pygame.Rect(xp, yp, hp, lp))
+#alle npcs
+npcs = [frau_weidmann, pharao]
 
 pixles = []
 
@@ -68,23 +75,42 @@ def get_movement_vector():
         
     return dx, dy # Return the calculated direction
 
-def npcmovement(npcs, steps, npcspeed):
-    #NPC algorythm 1
+def npcmovement(npcs, stepsw, npcspeedw, stepsp, npcspeedp):
     for npc in npcs:
         if npc == frau_weidmann:
-            if steps < 20:
-                npc.rect.x += npcspeed
-            elif steps >= 20 and steps < 40:
-                npc.rect.y += npcspeed
-            elif steps >= 40 and steps < 60:
-                npc.rect.x -= npcspeed
-            elif steps >= 60 and steps < 80:
-                npc.rect.y -= npcspeed
-            elif steps == 80:
-                steps = 0
-            steps += 1
-            return steps
-        
+            # npc läuft Rechteck ab (algorythmus von Ben)
+            if stepsw < 20:
+                npc.rect.x += npcspeedw  # nach rechts
+            elif stepsw < 40:
+                npc.rect.y += npcspeedw  # nach unten
+            elif stepsw < 60:
+                npc.rect.x -= npcspeedw  # nach links
+            elif stepsw < 80:
+                npc.rect.y -= npcspeedw  # nach oben
+            stepsw += 1
+            if stepsw >= 80:
+                stepsw = 0
+        elif npc == pharao:
+            # npc läuft Dreieck ab
+            if stepsp < 50:
+                npc.rect.x += npcspeedp  # nach rechts
+            elif stepsp < 100:
+                npc.rect.y += npcspeedp  # nach unten
+            elif stepsp < 150:
+                npc.rect.x -= npcspeedp  # nach links
+            elif stepsp < 200:
+                npc.rect.y += npcspeedp  # nach unten
+            elif stepsp < 250:
+                npc.rect.x -= npcspeedp  # nach links
+            elif stepsp < 300:
+                npc.rect.y -= npcspeedp  # nach oben
+            elif stepsp < 350:
+                npc.rect.y += npcspeedp  # nach oben  
+            stepsp += 1
+            if stepsp >= 350:
+                stepsp = 0
+    return stepsw, stepsp
+         
 def npcinteraction(lives, last_interaction):
     current_time = pygame.time.get_ticks()
     npc_coolown = 1000
@@ -147,15 +173,14 @@ def draw(x,y):
         Pixel_Währung_und_Sammlung.wallet.spend(1)
         return pixle
 
-if __name__ == "__main__":
+if __name__ == "__main__": #used in the begining for checking the file on its own (no longer works)
 
     screen = pygame.display.set_mode((1920, 1080))
 
     running = True
     while running:
-        #Event Handling
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: # Added a proper quit check
+            if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
