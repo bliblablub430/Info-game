@@ -2,6 +2,7 @@ import pygame
 import ostblock
 import mapinteraction
 import Pixel_Währung_und_Sammlung
+import herz_system
 
 pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
@@ -17,7 +18,9 @@ xn, yn = 800, 600
 hn, ln = 50, 50
 steps = 0
 npcspeed = 5
-npc = pygame.Rect(xn, yn, hn, ln)
+frau_weidmann = pygame.Rect(xn, yn, hn, ln)
+
+npcs = [frau_weidmann]
 
 pixles = []
 
@@ -58,23 +61,36 @@ def get_movement_vector():
         
     return dx, dy # Return the calculated direction
 
-def npcmovement(npc, steps, npcspeed):
-    #NPC algorythm
-    if steps < 20:
-        npc.x += npcspeed
-    elif steps >= 20 and steps < 40:
-        npc.y += npcspeed
-    elif steps >= 40 and steps < 60:
-        npc.x -= npcspeed
-    elif steps >= 60 and steps < 80:
-        npc.y -= npcspeed
-    elif steps == 80:
-        steps = 0
-    steps += 1
-    return steps
+def npcmovement(npcs, steps, npcspeed):
+    #NPC algorythm 1
+    for npc in npcs:
+        if npc == frau_weidmann:
+            if steps < 20:
+                npc.x += npcspeed
+            elif steps >= 20 and steps < 40:
+                npc.y += npcspeed
+            elif steps >= 40 and steps < 60:
+                npc.x -= npcspeed
+            elif steps >= 60 and steps < 80:
+                npc.y -= npcspeed
+            elif steps == 80:
+                steps = 0
+            steps += 1
+            return steps
+        
+def npcinteraction(lives, last_interaction):
+    current_time = pygame.time.get_ticks()
+    npc_coolown = 1000
+    for npc in npcs:
+        if character.colliderect(npc) and current_time - last_interaction > npc_coolown:
+            lives = herz_system.lose_life(lives)
+            last_interaction = current_time
+    return lives, last_interaction
 
-def drawing(screen, character, npc, pixles, last_pixel):
-     #check for drawing a pixel
+
+
+def drawing(screen, character, npcs, pixles, last_pixel):
+    #check for drawing a pixel
     current_time = pygame.time.get_ticks()
     pixel_coolown = 105
     keys = pygame.key.get_pressed()
@@ -86,7 +102,8 @@ def drawing(screen, character, npc, pixles, last_pixel):
     #Drawing everything
     ostblock.walldraw(screen) #Draw wall
     pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
-    pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
+    for npc in npcs:
+        pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
     for p in pixles:
         pygame.draw.rect(screen, (0, 255, 0), (p)) #Draw pixles
     return last_pixel
@@ -114,9 +131,9 @@ if __name__ == "__main__":
                     running = False
 
         x, y, dx, dy = movement(x, y, speed)
-        steps = npcmovement(npc, steps, npcspeed)
+        steps = npcmovement(npcs, steps, npcspeed)
         screen.fill((0, 0, 0)) # Clear screen
-        drawing(screen, character, npc, pixles)
+        drawing(screen, character, npcs, pixles)
         pygame.display.update() # Update the display
         clock.tick(60)
 
