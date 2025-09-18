@@ -2,6 +2,7 @@ import pygame
 import random 
 import Characters
 import musik
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.Rect
@@ -12,9 +13,11 @@ font_large = pygame.font.SysFont('Arial', 50)
 
 # Globale Variablen, um den Spielstand zwischenzufspeichern
 spieler_bet = []
+spieler_bet2 = []
 gewinn_zahl = -1
 ergebnis_text = ""
 input_string = ""
+input_string2 = ""
 
 roulette_X = 760
 roulette_Y = 560
@@ -39,18 +42,58 @@ def rouletteloop(game_state, current_state, events):
         # --- KOLLISIONS-CHECK ---
         # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
         if Characters.character.colliderect(roulette_trigger_zone): #Trigger
-            musik.stop_music()
-            musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
-            game_state = "roulette"
-            current_state = "waiting_for_bet"
+            if Pixel_Währung_und_Sammlung.wallet.get() == 0:
+                game_state = "normal"
+            else:
+                musik.stop_music()
+                musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
+                game_state = "roulette"
+                current_state = "waiting_for_number_input2"
     return game_state, current_state
 
 def roulettespiel_logik(current_state, events):
          
     # Wir brauchen global, da wir sie von außerhalb der Funktion ändern
-    global spieler_bet, gewinn_zahl, ergebnis_text, input_string
+    global spieler_bet, gewinn_zahl, ergebnis_text, input_string, spieler_bet2, input_string2
     
     # ----- ZUSTAND 1: WARTEN AUF EINSATZ -----
+    
+    if current_state == "waiting_for_number_input2":
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                # Eingabe mit ENTER bestätigen
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    try:
+                        # Versuche, die Eingabe in eine Liste von Zahlen umzuwandeln
+                        # Wir erlauben Kommas, um mehrere Zahlen zu trennen
+                        numbers_as_strings = input_string2.split(',')
+                        bet_list = []
+                        
+                        for num_str in numbers_as_strings:
+                            num = int(num_str.strip()) # .strip() entfernt Leerzeichen
+                            bet_list.append(num)
+                        
+                        if not bet_list: # Wenn Eingabe leer war
+                            raise ValueError
+
+                        spieler_bet2 = bet_list
+                        Pixel_Währung_und_Sammlung.wallet.spend(spieler_bet2[0])
+                        input_string2 = ""
+                        return "waiting_for_bet"
+
+                    except ValueError:
+                        # Wenn die Eingabe ungültig war
+                        input_string2 = "UNGÜLTIG!" # Feedback an Spieler
+                
+                # Mit BACKSPACE löschen
+                elif event.key == pygame.K_BACKSPACE:
+                    input_string2 = input_string2[:-1] # Letztes Zeichen entfernen
+                
+                # Normales Tippen (Zahlen und Komma)
+                elif event.unicode.isdigit() or event.unicode == ',':
+                    # Füge nur Zahlen oder ein Komma zur Eingabe hinzu
+                    input_string2 += event.unicode
+
     if current_state == "waiting_for_bet":
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -157,6 +200,7 @@ def roulettespiel_logik(current_state, events):
         if gewinn_zahl in spieler_bet:
             ergebnis_text = f"GEWONNEN! Die Zahl ist {gewinn_zahl}"
             musik.play_music("assets/sfx/gambling_win.mp3", loop=False, volume=0.7)
+            Pixel_Währung_und_Sammlung.wallet.add((36/len(spieler_bet))*spieler_bet2[0])
         else:
             ergebnis_text = f"Verloren. Die Zahl ist {gewinn_zahl}"
             musik.play_music("assets/sfx/gambling_loose.mp3", loop=False, volume=0.7)
@@ -168,43 +212,115 @@ def roulettespiel_logik(current_state, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    return "waiting_for_bet"
-
+                    return "waiting_for_number_input2"
+                
+    if Pixel_Währung_und_Sammlung.wallet.get() == 0:
+        game_state = "normmal"
+        return game_state
+    
     return current_state 
 
 def roulettespiel_zeichnen(current_state, screen):
-    
-    if current_state == "waiting_for_bet":
-        text1 = font_medium.render("PLATZIERE DEINE WETTE:", True, (255, 255, 255))
-        text2 = font_medium.render("Drücke [R] für Rot oder [S] für Schwarz" \
-        "[G] für gerade Zahlen, [U] für ungerade Zahlen", True, (255, 255, 255))
-        text3 = font_medium.render("[T] für Zahlen unter 18 und [H] für Zahlen über 18", True, (255,255,255))
-        text4 = font_medium.render("[C] für das erste Drittel der Zahlen, [V] für das zweite Drittel und [B] für das dritte Drittel", True,(255,255,255))
-        text5 = font_medium.render("Drücke [Y], um auf einzelne Zahlen zu setzen", True, (255, 255, 0)) # Gelb hervorgehoben
-        screen.blit(text1, (700, 600))
-        screen.blit(text2, (550, 650))
-        screen.blit(text3, (600, 700))
-        screen.blit(text4, (500,750))
-        screen.blit(text5, (550,800))
+    """
+    Zeichnet das Roulette-Panel sauber und strukturiert.
+    Die Eingabe für Einsatz und Zahlen ist jetzt in zwei getrennten Schritten.
+    """
+    # 1. Panel definieren und zeichnen
+    panel = pygame.Rect(0, 0, 850, 400)
+    panel.center = (screen.get_width() / 2, screen.get_height() / 2 + 100)
+    pygame.draw.rect(screen, (25, 28, 35), panel)
+    pygame.draw.rect(screen, (80, 90, 110), panel, 3)
+    titel_surface = font_large.render("ROULETTE", True, (255, 255, 0))
+    screen.blit(titel_surface, (panel.x + 20, panel.y + 15))
+
+    # --- ZUSTAND 1: EINSATZ EINGEBEN ---
+    # Dieser Zustand kommt zuerst und verschwindet dann.
+    if current_state == "waiting_for_number_input2":
+        # Anweisungstext
+        anweisung_text = font_medium.render("Gib deinen Einsatz ein:", True, (255, 255, 255))
+        anweisung_rect = anweisung_text.get_rect(center=(panel.centerx, panel.y + 120))
+        screen.blit(anweisung_text, anweisung_rect)
+
+        # Sichtbares Textfeld
+        input_box_rect = pygame.Rect(0, 0, 300, 50)
+        input_box_rect.center = panel.center
+        pygame.draw.rect(screen, (10, 10, 10), input_box_rect)
+
+        # Getippter Text für den Einsatz
+        input_surface = font_large.render(input_string2, True, (255, 255, 0))
+        screen.blit(input_surface, (input_box_rect.x + 15, input_box_rect.y + 5))
         
+        # Blinkender Cursor
+        if (pygame.time.get_ticks() // 500) % 2 == 1:
+            cursor_pos = input_box_rect.x + 15 + input_surface.get_width()
+            cursor_rect = pygame.Rect(cursor_pos, input_box_rect.y + 10, 4, input_box_rect.height - 20)
+            pygame.draw.rect(screen, (255, 255, 255), cursor_rect)
+            
+        # Hilfetext
+        hilfe_text = font_medium.render("Drücke [ENTER] zum Bestätigen", True, (200, 200, 200))
+        hilfe_rect = hilfe_text.get_rect(center=(panel.centerx, panel.bottom - 60))
+        screen.blit(hilfe_text, hilfe_rect)
+
+    # --- ZUSTAND 2: ZAHLEN AUSWÄHLEN ---
     elif current_state == "waiting_for_number_input":
-        text1 = font_medium.render("Gib Zahlen (0-36) ein, getrennt durch Komma:", True, (255, 255, 255))
-        
-        # Dies ist dein "Textfeld", das anzeigt, was du tippst
-        input_text_surface = font_large.render(input_string, True, (255, 255, 0))
-        
-        text2 = font_medium.render("Drücke [ENTER] zum Bestätigen oder [BACKSPACE] zum Löschen", True, (200, 200, 200))
+        # Anweisungstext
+        anweisung_text = font_medium.render("Gib Zahlen (0-36) ein, getrennt durch Komma:", True, (255, 255, 255))
+        anweisung_rect = anweisung_text.get_rect(center=(panel.centerx, panel.y + 120))
+        screen.blit(anweisung_text, anweisung_rect)
 
-        screen.blit(text1, (600, 600))
-        screen.blit(input_text_surface, (600, 650))
-        screen.blit(text2, (600, 700))
+        # Sichtbares Textfeld
+        input_box_rect = pygame.Rect(0, 0, 600, 60)
+        input_box_rect.center = panel.center
+        pygame.draw.rect(screen, (10, 10, 10), input_box_rect)
 
+        # Getippter Text für die Zahlen
+        input_surface = font_large.render(input_string, True, (255, 255, 0))
+        screen.blit(input_surface, (input_box_rect.x + 15, input_box_rect.y + 5))
+        
+        # Blinkender Cursor
+        if (pygame.time.get_ticks() // 500) % 2 == 1:
+            cursor_pos = input_box_rect.x + 15 + input_surface.get_width()
+            cursor_rect = pygame.Rect(cursor_pos, input_box_rect.y + 10, 4, input_box_rect.height - 20)
+            pygame.draw.rect(screen, (255, 255, 255), cursor_rect)
+        
+        # Hilfetext
+        hilfe_text = font_medium.render("Drücke [ENTER] zum Bestätigen oder [BACKSPACE] zum Löschen", True, (200, 200, 200))
+        hilfe_rect = hilfe_text.get_rect(center=(panel.centerx, panel.bottom - 60))
+        screen.blit(hilfe_text, hilfe_rect)
+
+    # --- ZUSTAND: AUF GRUPPEN-WETTE WARTEN ---
+    elif current_state == "waiting_for_bet":
+        instructions = [
+            "PLATZIERE DEINE WETTE:", "",
+            "[R] Rot  |  [S] Schwarz",
+            "[G] Gerade  |  [U] Ungerade",
+            "[T] Niedrig (1-18)  |  [H] Hoch (19-36)",
+            "[C] 1. Dutzend | [V] 2. Dutzend | [B] 3. Dutzend"
+        ]
+        
+        start_y = panel.y + 80
+        line_height = 40
+        for i, text in enumerate(instructions):
+            text_surface = font_medium.render(text, True, (255, 255, 255))
+            text_rect = text_surface.get_rect(centerx=panel.centerx, y=start_y + i * line_height)
+            screen.blit(text_surface, text_rect)
+            
+        y_text_surface = font_medium.render("Drücke [Y], um auf einzelne Zahlen zu setzen & Einsatz zu wählen", True, (255, 255, 0))
+        y_text_rect = y_text_surface.get_rect(centerx=panel.centerx, y=panel.bottom - 50)
+        screen.blit(y_text_surface, y_text_rect)
+
+    # --- ZUSTAND: RAD DREHT SICH ---
     elif current_state == "spinning":
-        text1 = font_large.render("...Rad dreht sich...", True, (255, 255, 0))
-        screen.blit(text1, (700, 600))
+        text_surface = font_large.render("...Rad dreht sich...", True, (255, 255, 0))
+        text_rect = text_surface.get_rect(center=panel.center)
+        screen.blit(text_surface, text_rect)
         
+    # --- ZUSTAND: ERGEBNIS ANZEIGEN ---
     elif current_state == "show_result":
-        text1 = font_large.render(ergebnis_text, True, (255, 255, 255))
-        text2 = font_medium.render("Drücke [LEERTASTE] zum Weiterspielen", True, (200, 200, 200))
-        screen.blit(text1, (700, 600))
-        screen.blit(text2, (700, 650))
+        ergebnis_surface = font_large.render(ergebnis_text, True, (255, 255, 255))
+        ergebnis_rect = ergebnis_surface.get_rect(center=(panel.centerx, panel.y + 120))
+        screen.blit(ergebnis_surface, ergebnis_rect)
+        
+        weiter_surface = font_medium.render("Drücke [LEERTASTE] zum Weiterspielen", True, (200, 200, 200))
+        weiter_rect = weiter_surface.get_rect(center=(panel.centerx, panel.bottom - 80))
+        screen.blit(weiter_surface, weiter_rect)
