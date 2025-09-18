@@ -100,11 +100,14 @@ def blackjackloop(game_state, bj_state, events):
     """Wechselt in Blackjack, wenn der Spieler die Trigger-Zone betritt."""
     if game_state == "normal":
         if Characters.character.colliderect(blackjack_trigger_zone):
-            musik.stop_music()
-            musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
-            game_state = "blackjack"
-            bj_reset_round()
-            bj_state = bj_check_for_blackjack()
+            if Pixel_Währung_und_Sammlung.wallet.get() == 0:
+                game_state = "normal"
+            else:
+                musik.stop_music()
+                musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
+                game_state = "blackjack"
+                bj_reset_round()
+                bj_state = bj_check_for_blackjack()
     return game_state, bj_state
 
 # ----- Zustand: Blackjack-Spiel-Logik -----
@@ -131,6 +134,7 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
                             raise ValueError
 
                         spieler_bet = bet_list
+                        Pixel_Währung_und_Sammlung.wallet.spend(spieler_bet[0])
                         input_string = ""
                         return "bj_player"
 
@@ -149,7 +153,6 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
 
     # --- bj_player: Spieler entscheidet Hit oder Stand ---
     if bj_state == "bj_player":
-        Pixel_Währung_und_Sammlung.wallet.spend()
         for e in events:
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_h:   # Hit: Karte ziehen
@@ -181,7 +184,7 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
         d = bj_total(bj_dealer_cards)
         if d > 21 or p > d:
             bj_result_text = "Player gewinnt!"
-            Pixel_Währung_und_Sammlung.wallet.add(2*Einsatz)
+            Pixel_Währung_und_Sammlung.wallet.add(2*spieler_bet[0])
             bj_msg = "Player gewinnt! (R=Restart  Q=Exit)"
             try:
                 musik.play_music("assets/sfx/gambling_win.mp3", loop=False, volume=0.7)
@@ -208,6 +211,10 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
                     # --- GEÄNDERT: Nach Reset erneut auf Blackjack prüfen ---
                     return bj_check_for_blackjack()
         return bj_state
+    
+    if Pixel_Währung_und_Sammlung.wallet.get() == 0:
+        game_state = "normal"
+        return game_state
 
     return bj_state
 
