@@ -3,6 +3,7 @@ import pygame
 import random
 import Characters
 import musik
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.font.init()
@@ -17,6 +18,8 @@ blackjack_BREITE, blackjack_HOEHE = 50, 50
 blackjack_trigger_zone = pygame.Rect(blackjack_X, blackjack_Y, blackjack_BREITE, blackjack_HOEHE)
 
 # --- Globale Variablen / Zustände für Blackjack ---
+spieler_bet = []
+input_string = ""
 bj_player_cards = []
 bj_dealer_cards = []
 bj_msg = ""
@@ -80,7 +83,7 @@ def bj_check_for_blackjack():
             pass
         return "bj_result"
     
-    return "bj_player" # Kein Blackjack, normales Spiel beginnt
+    return "waiting_for_number_input"
 
 # ----- Zustand: Escape / Verlassen des Blackjack-Modus -----
 def escapeblackjack(game_state, event):
@@ -101,17 +104,52 @@ def blackjackloop(game_state, bj_state, events):
             musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
             game_state = "blackjack"
             bj_reset_round()
-            # --- GEÄNDERT: Prüft sofort auf Blackjack, bevor der Spieler ziehen kann ---
             bj_state = bj_check_for_blackjack()
     return game_state, bj_state
 
 # ----- Zustand: Blackjack-Spiel-Logik -----
 def blackjackspiel_logik(bj_state, events, dt=0.0):
     """State-Machine für Blackjack: Steuerung der Spielphasen und Eingaben."""
-    global bj_player_cards, bj_dealer_cards, bj_msg, bj_result_text, bj_delay_timer
+    global bj_player_cards, bj_dealer_cards, bj_msg, bj_result_text, bj_delay_timer, spieler_bet, input_string
+
+    if bj_state == "waiting_for_number_input":
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                # Eingabe mit ENTER bestätigen
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    try:
+                        # Versuche, die Eingabe in eine Liste von Zahlen umzuwandeln
+                        # Wir erlauben Kommas, um mehrere Zahlen zu trennen
+                        numbers_as_strings = input_string.split(',')
+                        bet_list = []
+                        
+                        for num_str in numbers_as_strings:
+                            num = int(num_str.strip()) # .strip() entfernt Leerzeichen
+                            bet_list.append(num)
+                        
+                        if not bet_list: # Wenn Eingabe leer war
+                            raise ValueError
+
+                        spieler_bet = bet_list
+                        input_string = ""
+                        return "bj_player"
+
+                    except ValueError:
+                        # Wenn die Eingabe ungültig war
+                        input_string = "UNGÜLTIG!" # Feedback an Spieler
+                
+                # Mit BACKSPACE löschen
+                elif event.key == pygame.K_BACKSPACE:
+                    input_string = input_string[:-1] # Letztes Zeichen entfernen
+                
+                # Normales Tippen (Zahlen und Komma)
+                elif event.unicode.isdigit() or event.unicode == ',':
+                    # Füge nur Zahlen oder ein Komma zur Eingabe hinzu
+                    input_string += event.unicode
 
     # --- bj_player: Spieler entscheidet Hit oder Stand ---
     if bj_state == "bj_player":
+        Pixel_Währung_und_Sammlung.wallet.spend()
         for e in events:
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_h:   # Hit: Karte ziehen
@@ -143,6 +181,7 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
         d = bj_total(bj_dealer_cards)
         if d > 21 or p > d:
             bj_result_text = "Player gewinnt!"
+            Pixel_Währung_und_Sammlung.wallet.add(2*Einsatz)
             bj_msg = "Player gewinnt! (R=Restart  Q=Exit)"
             try:
                 musik.play_music("assets/sfx/gambling_win.mp3", loop=False, volume=0.7)
@@ -175,32 +214,58 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
 # ----- Zustand: Zeichnen des Blackjack-Panels -----
 def blackjackspiel_zeichnen(bj_state, screen):
     """Zeichnet das Blackjack-Panel mit Karten, Texten und Status."""
-    panel = pygame.Rect(560, 520, 700, 260)  # Position und Größe des Panels
+    
+    # 1. Das Haupt-Panel und der Titel werden immer gezeichnet
+    panel = pygame.Rect(560, 520, 700, 260)
     pygame.draw.rect(screen, (25, 28, 35), panel)
     pygame.draw.rect(screen, (80, 90, 110), panel, 2)
-
-    # Titel
     screen.blit(font_large.render("BLACKJACK", True, (255, 255, 0)), (panel.x + 20, panel.y + 10))
+    
+    # 2. Prüfen, ob wir im Texteingabe-Modus sind
+    if bj_state == "waiting_for_number_input":
+        # Wenn ja, zeichne das Eingabefeld zentriert im Panel
+        
+        # Anweisungstext
+        anweisung_text = font_medium.render("Gib deinen Einsatz ein:", True, (255, 255, 255))
+        anweisung_rect = anweisung_text.get_rect(center=(panel.centerx, panel.y + 80))
+        screen.blit(anweisung_text, anweisung_rect)
 
-    # Dealer-Karten (zweite Karte verdeckt, solange Spieler dran ist)
-    dy = panel.y + 70
-    if bj_state == "bj_player":
-        dealer_label = f"Dealer: {bj_dealer_cards[0]}  ?"
+        # Das sichtbare Textfeld
+        input_box_rect = pygame.Rect(0, 0, 300, 50)
+        input_box_rect.center = panel.center
+        pygame.draw.rect(screen, (10, 10, 10), input_box_rect)
+
+        # Der getippte Text (Annahme: globale Variable 'input_string' existiert)
+        input_surface = font_large.render(input_string, True, (255, 255, 0))
+        screen.blit(input_surface, (input_box_rect.x + 15, input_box_rect.y + 5))
+        
+        # Ein blinkender Cursor für besseres Feedback
+        if (pygame.time.get_ticks() // 500) % 2 == 1:
+            cursor_pos = input_box_rect.x + 15 + input_surface.get_width()
+            cursor_rect = pygame.Rect(cursor_pos, input_box_rect.y + 10, 3, input_box_rect.height - 20)
+            pygame.draw.rect(screen, (255, 255, 255), cursor_rect)
+            
     else:
-        dealer_label = f"Dealer: {' '.join(map(str, bj_dealer_cards))} = {bj_total(bj_dealer_cards)}"
-    screen.blit(font_medium.render(dealer_label, True, (220, 220, 220)), (panel.x + 20, dy))
+        # 3. Wenn NICHT im Texteingabe-Modus, zeichne das normale Spielbrett
+        
+        # Dealer-Karten (zweite Karte verdeckt, solange Spieler dran ist)
+        dy = panel.y + 70
+        if bj_state == "bj_player":
+            dealer_label = f"Dealer: {bj_dealer_cards[0]}  ?"
+        else:
+            dealer_label = f"Dealer: {' '.join(map(str, bj_dealer_cards))} = {bj_total(bj_dealer_cards)}"
+        screen.blit(font_medium.render(dealer_label, True, (220, 220, 220)), (panel.x + 20, dy))
 
-    # Spieler-Karten und Summe
-    py = dy + 40
-    player_label = f"Player: {' '.join(map(str, bj_player_cards))} = {bj_total(bj_player_cards)}"
-    screen.blit(font_medium.render(player_label, True, (220, 220, 220)), (panel.x + 20, py))
+        # Spieler-Karten und Summe
+        py = dy + 40
+        player_label = f"Player: {' '.join(map(str, bj_player_cards))} = {bj_total(bj_player_cards)}"
+        screen.blit(font_medium.render(player_label, True, (220, 220, 220)), (panel.x + 20, py))
 
-    # Steuerungs-Hinweise
-    my = py + 40
-    # --- GEÄNDERT: Der Hint ist jetzt der globale bj_msg für besseres Feedback ---
-    screen.blit(font_medium.render(bj_msg, True, (200, 230, 255)), (panel.x + 20, my))
+        # Steuerungs-Hinweise
+        my = py + 40
+        screen.blit(font_medium.render(bj_msg, True, (200, 230, 255)), (panel.x + 20, my))
 
-    # Ergebnis-Text (nur im Ergebnis-Zustand)
-    if bj_state == "bj_result":
-        ry = my + 40
-        screen.blit(font_medium.render(bj_result_text, True, (255, 255, 255)), (panel.x + 20, ry))
+        # Ergebnis-Text (nur im Ergebnis-Zustand)
+        if bj_state == "bj_result":
+            ry = my + 40
+            screen.blit(font_medium.render(bj_result_text, True, (255, 255, 255)), (panel.x + 20, ry))
