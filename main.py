@@ -36,10 +36,10 @@ musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
 
 while running:
     
-    # Events *einmal* pro Frame holen
-    events = pygame.event.get()
+     # Events *einmal* pro Frame holen
+     events = pygame.event.get()
     
-    for event in events:
+     for event in events:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
@@ -52,7 +52,7 @@ while running:
         game_state = black_jack.escapeblackjack(game_state, event)
 
     # RUFE die rouletteloop auf und fange den neuen State auf
-    if game_state == "normal":
+     if game_state == "normal":
             x, y, dx, dy = mapinteraction.wallinteraction(x, y, dx, dy, almosteverything) #Wall collition plus Character Movement
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             game_state,slots_state = Slots.slotloop(game_state,slots_state, events)
@@ -60,31 +60,32 @@ while running:
             Characters.steps = Characters.npcmovement(Characters.npcs, Characters.steps, Characters.npcspeed)
             lives, last_interaction = Characters.npcinteraction(lives, last_interaction)
 
-    elif game_state == "roulette":
+     elif game_state == "roulette":
          current_state = Gambling.roulettespiel_logik(current_state, events)
 
-    elif game_state == "slot":
+     elif game_state == "slot":
          slots_state = Slots.ergebnisseslot(slots_state, events)
 
-    elif game_state == "blackjack":
+     elif game_state == "blackjack":
          bj_state = black_jack.blackjackspiel_logik(bj_state, events, dt=1.0)
     
-    # --- ZEICHNEN ---
-    screen.fill((255, 255, 255)) # Hintergrund
-    pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
-    last_pixel = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel) 
-    lives = herz_system.draw_lives(screen, lives)
-    pygame.draw.rect(screen,(255,0,0),Slots.slot_trigger_zone)
-    pygame.draw.rect(screen,(255,0,0),black_jack.blackjack_trigger_zone)
-    Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
-    coordinaten_system.draw_coords(coordinaten_system.surface, Characters.character, font_size=24, padding=5)
-    if game_state == "roulette":
-        Gambling.roulettespiel_zeichnen(current_state, screen)
-    elif game_state == "slot":
-         Slots.slotszeichnen(screen, slots_state, Slots.Ergebnisliste, Slots.Mitteilung)
-    elif game_state == "blackjack":
-         black_jack.blackjackspiel_zeichnen(bj_state, screen)
-    pygame.display.update()
-    clock.tick(60)
+
+     # --- ZEICHNEN ---
+     screen.fill((255, 255, 255)) # Hintergrund
+     pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
+     last_pixel = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel)
+     lives = herz_system.draw_lives(screen, lives)
+     pygame.draw.rect(screen, (255, 0, 0), Slots.slot_trigger_zone)
+     pygame.draw.rect(screen, (255, 0, 0), black_jack.blackjack_trigger_zone)
+     Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
+     coordinaten_system.draw_coords(coordinaten_system.surface, Characters.character.rect, font_size=24, padding=5)
+     if game_state == "roulette":
+          Gambling.roulettespiel_zeichnen(current_state, screen)
+     elif game_state == "slot":
+          Slots.slotszeichnen(screen, slots_state, Slots.Ergebnisliste, Slots.Mitteilung)
+     elif game_state == "blackjack":
+          black_jack.blackjackspiel_zeichnen(bj_state, screen)
+     pygame.display.update()
+     clock.tick(60)
 
 pygame.quit()

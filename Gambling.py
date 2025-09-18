@@ -38,7 +38,7 @@ def rouletteloop(game_state, current_state, events):
     if game_state == "normal":
         # --- KOLLISIONS-CHECK ---
         # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
-        if Characters.character.colliderect(roulette_trigger_zone): #Trigger
+        if Characters.character.rect.colliderect(roulette_trigger_zone): #Trigger
             musik.stop_music()
             musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
             game_state = "roulette"
