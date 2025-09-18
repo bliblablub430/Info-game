@@ -22,6 +22,8 @@ almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation
 last_pixel = 0
 last_renzo = "Renzo\Renzo_1.png"
 last_interaction = 0
+stepsw = 0
+stepsp = 0
 
 lives = 3
 
@@ -70,7 +72,7 @@ while running:
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             game_state,slots_state = Slots.slotloop(game_state,slots_state, events)
             game_state,bj_state = black_jack.blackjackloop(game_state, bj_state, events)
-            Characters.stepsw, Characters.stepsp = Characters.npcmovement(Characters.npcs, Characters.stepsw, Characters.npcspeedw, Characters.stepsp, Characters.npcspeedp)
+            Characters.stepsw, Characters.stepsp, xw, yw, xp, yp = Characters.npcmovement(Characters.npcs, Characters.stepsw, Characters.npcspeedw, Characters.stepsp, Characters.npcspeedp)
             lives, last_interaction = Characters.npcinteraction(lives, last_interaction)
 
      elif game_state == "roulette":
@@ -86,7 +88,7 @@ while running:
      # --- ZEICHNEN ---
      screen.fill((255, 255, 255)) # Hintergrund
      pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
-     last_pixel, last_renzo = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel, last_renzo)
+     last_pixel, last_renzo, stepsw, stepsp = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp)
      lives = herz_system.draw_lives(screen, lives)
      pygame.draw.rect(screen, (255, 0, 0), Slots.slot_trigger_zone)
      pygame.draw.rect(screen, (255, 0, 0), black_jack.blackjack_trigger_zone)
