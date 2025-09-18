@@ -10,7 +10,7 @@ pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
-farben = ["R", "Gr", "B", "G", "P"]  # Farbe pro Pixeltyp
+farben = ["R", "Gr", "B", "G", "P"]  # Farbe pro Pixeltyp 
 aktuelle_farbe = 0
 
 # Player sprite
