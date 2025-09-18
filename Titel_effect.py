@@ -1,4 +1,5 @@
 import pygame
+import musik
 
 def show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7):
     font = pygame.font.Font(None, 72)
@@ -7,6 +8,7 @@ def show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7):
 
     clock = pygame.time.Clock()
     total_frames = duration * 60
+    musik.play_music("assets/sfx/intro_theme.mp3", loop=False, volume=0.5)
 
     for frame in range(total_frames):
         alpha = 255

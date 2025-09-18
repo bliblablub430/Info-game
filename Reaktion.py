@@ -2,7 +2,8 @@
 import pygame
 import time
 import Characters
-import musik # Annahme, dass du später Musik hinzufügen willst
+import musik 
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.font.init()
@@ -83,8 +84,10 @@ def reaktion_logik(events):
                     if 1 <= zahl <= 10:
                         if zahl == wechselzahl:
                             ergebnis_text = "Reaktionszeit einer Gazelle"
+                            Pixel_Währung_und_Sammlung.wallet.add(200)
                         elif 0 < unterschied(zahl, wechselzahl) < 3:
                             ergebnis_text = "Reaktionszeit von Frau Lehmann"
+                            Pixel_Währung_und_Sammlung.wallet.add(50)
                         elif 3 < unterschied(zahl, wechselzahl) < 6:
                             ergebnis_text = "Reaktionszeit von Thong Cena"
                         else:

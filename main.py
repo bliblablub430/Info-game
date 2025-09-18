@@ -11,6 +11,7 @@ import Pixel_Währung_und_Sammlung
 import coordinaten_system
 import shop_system
 import Reaktion
+import Titel_effect
 
 pygame.init()
 pygame.mixer.init()
@@ -36,6 +37,7 @@ game_state = "normal" # Die EINZIGE game_state Variable
 current_state = "waiting_for_bet" # für Roulette
 slots_state = "auf_Start_warten" # für Slots
 bj_state = "bj_waiting"
+Titel_effect.show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7)
 musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
 
 while running:
@@ -88,13 +90,15 @@ while running:
      elif game_state == "Reaktion":
           Reaktion.reaktion_logik(events)
 
-     # --- ZEICHNEN ---
+     # ZEICHNEN
      screen.fill((255, 255, 255)) # Hintergrund
      ostblock.drawmap(ostblock.map_imgup)
      pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
      pygame.draw.rect(screen,(255,0,0), Reaktion.reaktion_trigger_zone)
      last_pixel, last_renzo = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel, last_renzo)
      lives = herz_system.draw_lives(screen, lives)
+     if lives == 0:
+          pygame.quit()
      pygame.draw.rect(screen, (255, 0, 0), Slots.slot_trigger_zone)
      pygame.draw.rect(screen, (255, 0, 0), black_jack.blackjack_trigger_zone)
      Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
