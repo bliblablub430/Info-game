@@ -1,3 +1,4 @@
+import pygame
 import Characters
 import ostblock
 
@@ -7,22 +8,28 @@ almosteverything = []
 def wallinteraction(x, y, dx, dy, almosteverything):
     moving_everythingx(dx, almosteverything)
     for wall in ostblock.walls:
-        if Characters.character.colliderect(wall):
-                moving_everythingx(-dx, almosteverything)
+        if Characters.character.rect.colliderect(wall):
+            moving_everythingx(-dx, almosteverything)
     moving_everythingy(dy, almosteverything)
     for wall in ostblock.walls:
-        if Characters.character.colliderect(wall):
+        if Characters.character.rect.colliderect(wall):
             moving_everythingy(-dy, almosteverything)
-    x, y, dx, dy = Characters.movement(x, y, Characters.speed)
+    x, y, dx, dy = Characters.movement(x, y, Characters.speed, True)
     return x, y, dx, dy
 
 def moving_everythingx(dx, almosteverything):
      for objects in almosteverything:
-          objects.x += dx
+        if isinstance(objects, pygame.sprite.Sprite):
+            objects.rect.x += dx
+        else:
+            objects.x += dx
 
 def moving_everythingy(dy, almosteverything):
      for objects in almosteverything:
-          objects.y += dy
+        if isinstance(objects, pygame.sprite.Sprite):
+            objects.rect.y += dy
+        else:
+            objects.y += dy
 
 def add_to_almosteverything(object, almosteverything):
     if type(object) == list:

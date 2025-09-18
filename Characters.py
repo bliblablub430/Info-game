@@ -3,40 +3,45 @@ import ostblock
 import mapinteraction
 import Pixel_Währung_und_Sammlung
 import herz_system
+import sprites
+import shop_system
 
 pygame.init()
 pygame.display.set_caption("Frau_Weidman_Hunter69")
 clock = pygame.time.Clock()
 
-# Player variables
+# Player sprite
 x, y = 960, 540
 h, l = 50, 50
 speed = 10
-character = pygame.Rect(x, y, h, l)
+character = sprites.Sprites("Renzo_1.png", pygame.Rect(x, y, h, l))
 
+# NPC sprite(s)
 xn, yn = 800, 600
 hn, ln = 50, 50
 steps = 0
 npcspeed = 5
-frau_weidmann = pygame.Rect(xn, yn, hn, ln)
-
+frau_weidmann = sprites.Sprites("Renzo_1.png", pygame.Rect(xn, yn, hn, ln))
 npcs = [frau_weidmann]
 
 pixles = []
 
-def movement(x, y, speed): #actuall movement happens in mapinteraction.wallinteraction
+def movement(x, y, speed, sprint_unlocked): #actuall movement happens in mapinteraction.wallinteraction
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_RSHIFT]:
-        speedc = speed*2
+    if sprint_unlocked:
+        if keys[pygame.K_RSHIFT]:
+            speedc = speed*2
+        else:
+            speedc = speed
     else:
         speedc = speed
     dx, dy = get_movement_vector() 
     x += dx * speedc
     if __name__ == "__main__":
-        character.x = x
+        character.rect.x = x
     y += dy * speedc
     if __name__ == "__main__":
-        character.y = y
+        character.rect.y = y
     return x, y, (dx*speedc), (dy*speedc)
 
 def get_movement_vector():
@@ -66,13 +71,13 @@ def npcmovement(npcs, steps, npcspeed):
     for npc in npcs:
         if npc == frau_weidmann:
             if steps < 20:
-                npc.x += npcspeed
+                npc.rect.x += npcspeed
             elif steps >= 20 and steps < 40:
-                npc.y += npcspeed
+                npc.rect.y += npcspeed
             elif steps >= 40 and steps < 60:
-                npc.x -= npcspeed
+                npc.rect.x -= npcspeed
             elif steps >= 60 and steps < 80:
-                npc.y -= npcspeed
+                npc.rect.y -= npcspeed
             elif steps == 80:
                 steps = 0
             steps += 1
@@ -82,7 +87,7 @@ def npcinteraction(lives, last_interaction):
     current_time = pygame.time.get_ticks()
     npc_coolown = 1000
     for npc in npcs:
-        if character.colliderect(npc) and current_time - last_interaction > npc_coolown:
+        if character.rect.colliderect(npc.rect) and current_time - last_interaction > npc_coolown:
             lives = herz_system.lose_life(lives)
             last_interaction = current_time
     return lives, last_interaction
@@ -95,15 +100,15 @@ def drawing(screen, character, npcs, pixles, last_pixel):
     pixel_coolown = 105
     keys = pygame.key.get_pressed()
     if keys[pygame.K_j] and current_time - last_pixel > pixel_coolown:
-        pixle = draw(character.x, character.y)
+        pixle = draw(character.rect.x, character.rect.y)
         if pixle is not None:
             pixles.append(pixle)
             last_pixel = current_time
     #Drawing everything
     ostblock.walldraw(screen) #Draw wall
-    pygame.draw.rect(screen, (0, 0, 255), character) # Draw player
+    screen.blit(character.image, character.rect) # Draw player sprite
     for npc in npcs:
-        pygame.draw.rect(screen, (255, 0, 0), npc) #Draw npc
+        screen.blit(npc.image, npc.rect) # Draw NPC sprite(s)
     for p in pixles:
         pygame.draw.rect(screen, (0, 255, 0), (p)) #Draw pixles
     return last_pixel

@@ -41,7 +41,7 @@ def rouletteloop(game_state, current_state, events):
     if game_state == "normal":
         # --- KOLLISIONS-CHECK ---
         # Prüft, ob sich das Spieler-Rechteck und die Zone überlappen
-        if Characters.character.colliderect(roulette_trigger_zone): #Trigger
+        if Characters.character.rect.colliderect(roulette_trigger_zone): #Trigger
             if Pixel_Währung_und_Sammlung.wallet.get() == 0:
                 game_state = "normal"
             else:
