@@ -99,7 +99,7 @@ def escapeblackjack(game_state, event):
 def blackjackloop(game_state, bj_state, events):
     """Wechselt in Blackjack, wenn der Spieler die Trigger-Zone betritt."""
     if game_state == "normal":
-        if Characters.character.colliderect(blackjack_trigger_zone):
+        if Characters.character.rect.colliderect(blackjack_trigger_zone):
             if Pixel_Währung_und_Sammlung.wallet.get() == 0:
                 game_state = "normal"
             else:

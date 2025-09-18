@@ -31,12 +31,12 @@ def escapeslot(game_state, event):
 def slotloop(game_state, slot_state, events):
     if game_state == "normal":
         # --- KOLLISIONS-CHECK ---
-        if Characters.character.colliderect(slot_trigger_zone): #Trigger
-                if Pixel_Währung_und_Sammlung.wallet.get() < 50:
-                    game_state = "normal"
-                else:
-                    game_state = "slot"
-                    slot_state = "auf_Start_warten"
+        if Characters.character.rect.colliderect(slot_trigger_zone): #Trigger
+            if Pixel_Währung_und_Sammlung.wallet.get() < 50:
+                game_state = "normal"
+            else:
+                game_state = "slot"
+                slot_state = "auf_Start_warten"
     return game_state, slot_state
 
 def ergebnisseslot(slots_state, events):
