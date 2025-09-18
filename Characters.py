@@ -25,8 +25,9 @@ character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
 xw, yw = 800, 600
 hw, lw = 40, 50
 stepsw = 0
-npcspeedw = 5
-frau_weidmann = sprites.Sprites("Renzo_1.png", pygame.Rect(xw, yw, hw, lw))
+npcspeedw = 20
+frau_weidmann_def = "Vampir\Silke_1.png"
+frau_weidmann = sprites.Sprites(frau_weidmann_def, pygame.Rect(xw, yw, hw, lw))
 #Pharao
 xp, yp = 100, 800
 hp, lp = 40, 50
@@ -84,40 +85,84 @@ def get_movement_vector():
     return dx, dy # Return the calculated direction
 
 def npcmovement(npcs, stepsw, npcspeedw, stepsp, npcspeedp):
+    xw, yw = frau_weidmann.rect.x, frau_weidmann.rect.y
+    xp, yp = pharao.rect.x, pharao.rect.y
     for npc in npcs:
         if npc == frau_weidmann:
             # npc läuft Rechteck ab (algorythmus von Ben)
-            if stepsw < 20:
-                npc.rect.x += npcspeedw  # nach rechts
-            elif stepsw < 40:
+            if stepsw < 250:
+                npc.rect.x -= npcspeedw # nach links
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 700:
                 npc.rect.y += npcspeedw  # nach unten
-            elif stepsw < 60:
-                npc.rect.x -= npcspeedw  # nach links
-            elif stepsw < 80:
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 1000:
+                npc.rect.x += npcspeedw  # nach rechts
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 1200:
                 npc.rect.y -= npcspeedw  # nach oben
-            stepsw += 1
-            if stepsw >= 80:
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 1600:
+                npc.rect.x -= npcspeedw  # nach links
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 2000:
+                npc.rect.y += npcspeedw  #nach unten
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 2200:
+                npc.rect.y -= npcspeedw  #nach oben
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 2550:
+                npc.rect.x += npcspeedw  #nach rechts
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw < 3000:
+                npc.rect.y -= npcspeedw  #nach oben
+                xw = npc.rect.x  
+                yw = npc.rect.y
+            elif stepsw >= 3000:
                 stepsw = 0
+            stepsw += 1
         elif npc == pharao:
             # npc läuft Dreieck ab
             if stepsp < 50:
                 npc.rect.x += npcspeedp  # nach rechts
+                xp = npc.rect.x
+                yp = npc.rect.y
             elif stepsp < 100:
                 npc.rect.y += npcspeedp  # nach unten
+                xp = npc.rect.x
+                yp = npc.rect.y
             elif stepsp < 150:
                 npc.rect.x -= npcspeedp  # nach links
+                xp = npc.rect.x
+                yp = npc.rect.y
             elif stepsp < 200:
                 npc.rect.y += npcspeedp  # nach unten
+                xp = npc.rect.x
+                yp = npc.rect.y
             elif stepsp < 250:
                 npc.rect.x -= npcspeedp  # nach links
+                xp = npc.rect.x
+                yp = npc.rect.y
             elif stepsp < 300:
                 npc.rect.y -= npcspeedp  # nach oben
+                xp = npc.rect.x
+                yp = npc.rect.y
             elif stepsp < 350:
                 npc.rect.y += npcspeedp  # nach oben  
-            stepsp += 1
+                xp = npc.rect.x
+                yp = npc.rect.y
             if stepsp >= 350:
                 stepsp = 0
-    return stepsw, stepsp
+            stepsp += 1
+    return stepsw, stepsp, xw, yw, xp, yp
          
 def npcinteraction(lives, last_interaction):
     current_time = pygame.time.get_ticks()
@@ -125,12 +170,13 @@ def npcinteraction(lives, last_interaction):
     for npc in npcs:
         if character.rect.colliderect(npc.rect) and current_time - last_interaction > npc_coolown:
             lives = herz_system.lose_life(lives)
+            Pixel_Währung_und_Sammlung.PixelBank.add(Pixel_Währung_und_Sammlung.wallet, 5000)
             last_interaction = current_time
     return lives, last_interaction
 
 
 
-def drawing(screen, character, npcs, pixles, last_pixel, last_renzo):
+def drawing(screen, character, npcs, pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp):
     #check for drawing a pixel
     current_time = pygame.time.get_ticks()
     pixel_coolown = 105
@@ -184,9 +230,75 @@ def drawing(screen, character, npcs, pixles, last_pixel, last_renzo):
     else:
         character = sprites.Sprites(last_renzo, pygame.Rect(x, y, h, l))
         screen.blit(character.image, character.rect) # Draw player sprite
-    for npc in npcs:
-        screen.blit(npc.image, npc.rect) # Draw NPC sprite(s)
-
+    # npc animation
+    silke = ["Vampir\Silke_1.png", "Vampir\Silke_2.png", "Vampir\Silke_3.png", "Vampir\Silke_4.png", "Vampir\Silke_5.png", "Vampir\Silke_6.png", "Vampir\Silke_7.png", "Vampir\Silke_8.png", ]
+    if stepsw < 250:
+        if stepsw % 5 == 0: #alle fünf frames
+            frau_weidmann = sprites.Sprites(silke[2], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect)
+        else:
+            frau_weidmann = sprites.Sprites(silke[3], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # nach links
+    elif stepsw < 700:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[0], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[1], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # nach unten
+    elif stepsw < 1000:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[4], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[5], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # nach rechts
+    elif stepsw < 1200:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[6], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[7], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # nach oben
+    elif stepsw < 1600:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[2], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[3], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect)  # nach links
+    elif stepsw < 2000:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[0], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[1], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect)  #nach unten
+    elif stepsw < 2200:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[6], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[7], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect)  #nach oben
+    elif stepsw < 2550:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[4], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[5], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect)  #nach rechts
+    elif stepsw < 3000:
+        if stepsw % 5 == 0:
+            frau_weidmann = sprites.Sprites(silke[6], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
+        else:
+            frau_weidmann = sprites.Sprites(silke[7], pygame.Rect(xw, yw, hw, lw))
+            screen.blit(frau_weidmann.image, frau_weidmann.rect)  #nach oben
+    elif stepsw >= 3000:
+        stepsw = 0
+    stepsw += 1
+    
     for p in pixles_R:
         pygame.draw.rect(screen, (250, 0, 0), p)
 
