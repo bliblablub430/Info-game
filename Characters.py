@@ -317,7 +317,7 @@ def drawing(screen, character, npcs, pixles, last_pixel, last_renzo, stepsw, ste
     for p in pixles:
         pygame.draw.rect(screen, (0, 255, 0), p)
 
-    return last_pixel, last_renzo
+    return last_pixel, last_renzo, stepsw, stepsp
 
 
 def draw(x,y):
