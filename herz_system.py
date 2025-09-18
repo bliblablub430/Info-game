@@ -1,4 +1,4 @@
-import pygame
+import pygame # von Chatgpt gezeichnet
 
 def draw_lives(surface, lives, x=1400, y=220, max_lives=3, size=16, trianglefactor=1.44, gap=8):   # Herzen als rote Kreise + Dreieck
   
@@ -18,9 +18,9 @@ def draw_lives(surface, lives, x=1400, y=220, max_lives=3, size=16, trianglefact
         pygame.draw.polygon(surface, color, points)
     return lives
 
-def lose_life(lives):
+def lose_life(lives): # von Thông
     lives -= 1
     return lives
 
-def gain_life(lives, max_lives=3):
+def gain_life(lives, max_lives=3): # von Thông
     return min(lives + 1, max_lives)

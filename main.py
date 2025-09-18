@@ -10,6 +10,8 @@ import herz_system
 import Pixel_Währung_und_Sammlung
 import coordinaten_system
 import shop_system
+import Reaktion
+import Titel_effect
 
 pygame.init()
 pygame.mixer.init()
@@ -17,10 +19,10 @@ screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
-almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npcs, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone], mapinteraction.almosteverything)
+almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npcs, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone, ostblock.map_imgsp, Reaktion.reaktion_trigger_zone], mapinteraction.almosteverything)
 
 last_pixel = 0
-last_renzo = "Renzo\Renzo_1.png"
+last_renzo = "Renzo/Renzo_1.png"
 last_interaction = 0
 stepsw = 0
 stepsp = 0
@@ -37,6 +39,7 @@ game_state = "normal" # Die EINZIGE game_state Variable
 current_state = "waiting_for_bet" # für Roulette
 slots_state = "auf_Start_warten" # für Slots
 bj_state = "bj_waiting"
+Titel_effect.show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7)
 musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
 
 while running:
@@ -65,6 +68,7 @@ while running:
         game_state = Gambling.escaperoulette(game_state, event)
         game_state = Slots.escapeslot(game_state, event)
         game_state = black_jack.escapeblackjack(game_state, event)
+        game_state = Reaktion.escapereaktion(game_state, event)
 
     # RUFE die rouletteloop auf und fange den neuen State auf
      if game_state == "normal":
@@ -74,6 +78,7 @@ while running:
             game_state,bj_state = black_jack.blackjackloop(game_state, bj_state, events)
             Characters.stepsw, Characters.stepsp, xw, yw, xp, yp = Characters.npcmovement(Characters.npcs, Characters.stepsw, Characters.npcspeedw, Characters.stepsp, Characters.npcspeedp)
             lives, last_interaction = Characters.npcinteraction(lives, last_interaction)
+            game_state = Reaktion.reaktionloop(game_state)
 
      elif game_state == "roulette":
          current_state = Gambling.roulettespiel_logik(current_state, events)
@@ -83,13 +88,19 @@ while running:
 
      elif game_state == "blackjack":
          bj_state = black_jack.blackjackspiel_logik(bj_state, events, dt=1.0)
-    
+     
+     elif game_state == "Reaktion":
+          Reaktion.reaktion_logik(events)
 
-     # --- ZEICHNEN ---
+     # ZEICHNEN
      screen.fill((255, 255, 255)) # Hintergrund
+     ostblock.drawmap(ostblock.map_imgup)
      pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
      last_pixel, last_renzo, stepsw, stepsp = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp)
+     pygame.draw.rect(screen,(255,0,0), Reaktion.reaktion_trigger_zone)
      lives = herz_system.draw_lives(screen, lives)
+     if lives == 0:
+          pygame.quit()
      pygame.draw.rect(screen, (255, 0, 0), Slots.slot_trigger_zone)
      pygame.draw.rect(screen, (255, 0, 0), black_jack.blackjack_trigger_zone)
      Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
@@ -102,6 +113,8 @@ while running:
           Slots.slotszeichnen(screen, slots_state, Slots.Ergebnisliste, Slots.Mitteilung)
      elif game_state == "blackjack":
           black_jack.blackjackspiel_zeichnen(bj_state, screen)
+     elif game_state == "Reaktion":
+          Reaktion.reaktion_zeichnen(screen)
      pygame.display.update()
      clock.tick(60)
 
