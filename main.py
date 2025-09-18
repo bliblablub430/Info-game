@@ -6,6 +6,7 @@ import ostblock
 import mapinteraction
 import Slots
 import black_jack
+import Pixel_Währung_und_Sammlung
 
 pygame.init()
 pygame.mixer.init()
@@ -13,12 +14,7 @@ screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
-<<<<<<< HEAD
-#For movement
-almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc], mapinteraction.almosteverything)
-=======
 almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npc, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone], mapinteraction.almosteverything)
->>>>>>> db9c9f58e496fdec8b059e4615d24d2f88623f64
 
 last_pixel = 0
 
@@ -70,13 +66,10 @@ while running:
     # --- ZEICHNEN ---
     screen.fill((255, 255, 255)) # Hintergrund
     pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
-<<<<<<< HEAD
     last_pixel = Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles, last_pixel) 
-=======
     pygame.draw.rect(screen,(255,0,0),Slots.slot_trigger_zone)
     pygame.draw.rect(screen,(255,0,0),black_jack.blackjack_trigger_zone)
-    Characters.drawing(screen, Characters.character, Characters.npc, Characters.pixles) 
->>>>>>> db9c9f58e496fdec8b059e4615d24d2f88623f64
+    Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
     if game_state == "roulette":
         Gambling.roulettespiel_zeichnen(current_state, screen)
     elif game_state == "slot":
