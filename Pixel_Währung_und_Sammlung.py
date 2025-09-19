@@ -1,4 +1,4 @@
-# Pixel-Währung + Sammeln + HUD * Von Chatgpt
+# Pixel-Währung + Sammeln + HUD * (Von Chatgpt und Copilot korriegiert und verbessert, wird in Characters.py und Gambling.py selber implementiert)
 import pygame
 
 surface = pygame.display.set_mode((150, 100))
