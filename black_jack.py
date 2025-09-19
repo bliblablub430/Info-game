@@ -1,4 +1,4 @@
-# black_jack.py
+# black_jack.py von Chatgpt, wurde von Luc in main.py implementiert
 import pygame
 import random
 import Characters

@@ -1,4 +1,4 @@
-import pygame
+import pygame # von Chatgpt, wurde von Luc und Olivier in main.py implementiert
 
 def draw_shop_icon(surface, sx, sy, size=20):
     # Shop Symbol unten rechts zeichnen
@@ -12,7 +12,7 @@ def draw_shop_icon(surface, sx, sy, size=20):
     # Positionen für rechts unten berechnen
     total_width = size + 5 + text_surface.get_width()
     total_height = max(size, text_surface.get_height())
-
+    
     icon_x = sx - total_width
     icon_y = sy - total_height
 

@@ -1,5 +1,5 @@
-import pygame
-
+import pygame 
+# Titel_effect von Chatgpt
 def show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7):
     font = pygame.font.Font(None, 72)
     text = font.render(title, True, (255, 255, 255))
