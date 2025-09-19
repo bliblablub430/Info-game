@@ -2,6 +2,8 @@ import pygame
 
 pygame.mixer.init()
 
+# Try & Except, mit parameter "Path" wurde von Copilot vorgeschlagen 
+
 def play_music(path, loop=True, volume=0.5): #loop = True (Enlosschleife) und loop = False ( einmal abspielen)
     try:
         pygame.mixer.music.load(path) # Lädt die Musikdatei

@@ -14,7 +14,7 @@ slot_X = 100
 slot_Y = 200
 slot_Breite = 50
 slot_Höhe = 50
-slot_trigger_zone = pygame.Rect(slot_X, slot_Y, slot_Breite, slot_Höhe)
+slot_trigger_zones = [pygame.Rect(slot_X, slot_Y, slot_Breite, slot_Höhe),pygame.Rect(slot_X + 2000, slot_Y + 1000, slot_Breite, slot_Höhe),pygame.Rect(slot_X - 2000, slot_Y, slot_Breite, slot_Höhe)]
 
 slotliste = ["I","I","I","I","I","I","I","I","I","A","A","A","A","A","A","T","T","T"]
 Ergebnisliste = []
@@ -31,15 +31,16 @@ def escapeslot(game_state, event):
 def slotloop(game_state, slot_state, events):
     if game_state == "normal":
         # --- KOLLISIONS-CHECK ---
-        if Characters.character.rect.colliderect(slot_trigger_zone): #Trigger
-            if Pixel_Währung_und_Sammlung.wallet.get() < 50:
-                game_state = "normal"
-            else:
-                game_state = "slot"
-                slot_state = "auf_Start_warten"
+        for i in range(len(slot_trigger_zones)):
+            if Characters.character.rect.colliderect(slot_trigger_zones[i]): #Trigger
+                if Pixel_Währung_und_Sammlung.wallet.get() < 50:
+                    game_state = "normal"
+                else:
+                    game_state = "slot"
+                    slot_state = "auf_Start_warten"
     return game_state, slot_state
 
-def ergebnisseslot(slots_state, events):
+def ergebnisseslot(slots_state, events): #eigentlich logik
     # Diese globalen Variablen müssen deklariert werden, damit die Funktion sie ändern kann.
     global Ergebnisliste, Mitteilung
 
@@ -59,7 +60,7 @@ def ergebnisseslot(slots_state, events):
         for i in range(3):
             Ergebnisliste.append(random.choice(slotliste))
 
-        a, b, c = Ergebnisliste[0], Ergebnisliste[1], Ergebnisliste[2]
+        a, b, c = Ergebnisliste[0], Ergebnisliste[1], Ergebnisliste[2] # AI hat aufgeräumt
 
         if a == "T" and b == "T" and c == "T":
             Mitteilung = "BOOM Hauptgewinn"
@@ -83,6 +84,10 @@ def ergebnisseslot(slots_state, events):
                     
     return slots_state # Wenn nichts passiert, den aktuellen Zustand beibehalten
 
+def draw_slots_trigger(screen, slots_trigger_zones):
+    for i in range(len(slot_trigger_zones)):
+        pygame.draw.rect(screen, (255,0,0), slots_trigger_zones[i])
+
 def slotszeichnen(screen, slots_state, Ergebnisliste, Mitteilung):
     # Zustand 1: Warten auf den Start des Spiels
     if slots_state == "auf_Start_warten":
@@ -99,7 +104,7 @@ def slotszeichnen(screen, slots_state, Ergebnisliste, Mitteilung):
     # Zustand 3: Ergebnis anzeigen
     elif slots_state == "Ergebnisse":
         # Die Symbole aus der Ergebnisliste mit der Minedings-Schriftart zeichnen
-        ergebnis_string = " ".join(Ergebnisliste) # Macht z.B. "A I T" aus ['A', 'I', 'T']
+        ergebnis_string = " ".join(Ergebnisliste) # Macht z.B. "A I T" aus ['A', 'I', 'T'] #AI
         symbol_text = minecraftfont.render(ergebnis_string, True, (0, 0, 0))
         
         # Die Gewinn/Verlust-Mitteilung zeichnen

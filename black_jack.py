@@ -1,4 +1,4 @@
-# black_jack.py
+# black_jack.py von Thong komplett KI generiert, bearbeitet von Luc
 import pygame
 import random
 import Characters
@@ -13,9 +13,9 @@ font_medium = pygame.font.SysFont('Arial', 30)
 font_large  = pygame.font.SysFont('Arial', 50)
 
 # --- Trigger-Zone für Blackjack (Position und Größe anpassen) ---
-blackjack_X, blackjack_Y = 900, 560
+blackjack_X, blackjack_Y = 900, 400
 blackjack_BREITE, blackjack_HOEHE = 50, 50
-blackjack_trigger_zone = pygame.Rect(blackjack_X, blackjack_Y, blackjack_BREITE, blackjack_HOEHE)
+blackjack_trigger_zones = [pygame.Rect(blackjack_X, blackjack_Y, blackjack_BREITE, blackjack_HOEHE), pygame.Rect(blackjack_X + 4000, blackjack_Y + 4000, blackjack_BREITE, blackjack_HOEHE), pygame.Rect(blackjack_X - 3000, blackjack_Y + 5000, blackjack_BREITE, blackjack_HOEHE)] # Human
 
 # --- Globale Variablen / Zustände für Blackjack ---
 spieler_bet = []
@@ -83,7 +83,7 @@ def bj_check_for_blackjack():
             pass
         return "bj_result"
     
-    return "waiting_for_number_input"
+    return "waiting_for_number_input" #Human
 
 # ----- Zustand: Escape / Verlassen des Blackjack-Modus -----
 def escapeblackjack(game_state, event):
@@ -99,15 +99,16 @@ def escapeblackjack(game_state, event):
 def blackjackloop(game_state, bj_state, events):
     """Wechselt in Blackjack, wenn der Spieler die Trigger-Zone betritt."""
     if game_state == "normal":
-        if Characters.character.rect.colliderect(blackjack_trigger_zone):
-            if Pixel_Währung_und_Sammlung.wallet.get() == 0:
-                game_state = "normal"
-            else:
-                musik.stop_music()
-                musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
-                game_state = "blackjack"
-                bj_reset_round()
-                bj_state = bj_check_for_blackjack()
+        for i in range(len(blackjack_trigger_zones)):
+            if Characters.character.rect.colliderect(blackjack_trigger_zones[i]):
+                if Pixel_Währung_und_Sammlung.wallet.get() == 0:
+                    game_state = "normal"
+                else:
+                    musik.stop_music()
+                    musik.play_music("assets/sfx/gambling_theme.mp3", loop=True, volume=0.5)
+                    game_state = "blackjack"
+                    bj_reset_round()
+                    bj_state = bj_check_for_blackjack()
     return game_state, bj_state
 
 # ----- Zustand: Blackjack-Spiel-Logik -----
@@ -115,7 +116,7 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
     """State-Machine für Blackjack: Steuerung der Spielphasen und Eingaben."""
     global bj_player_cards, bj_dealer_cards, bj_msg, bj_result_text, bj_delay_timer, spieler_bet, input_string
 
-    if bj_state == "waiting_for_number_input":
+    if bj_state == "waiting_for_number_input": # übernommen aus Gambling.py, aber human
         for event in events:
             if event.type == pygame.KEYDOWN:
                 # Eingabe mit ENTER bestätigen
@@ -184,7 +185,7 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
         d = bj_total(bj_dealer_cards)
         if d > 21 or p > d:
             bj_result_text = "Player gewinnt!"
-            Pixel_Währung_und_Sammlung.wallet.add(2*spieler_bet[0])
+            Pixel_Währung_und_Sammlung.wallet.add(2*spieler_bet[0]) #Human
             bj_msg = "Player gewinnt! (R=Restart  Q=Exit)"
             try:
                 musik.play_music("assets/sfx/gambling_win.mp3", loop=False, volume=0.7)
@@ -212,14 +213,18 @@ def blackjackspiel_logik(bj_state, events, dt=0.0):
                     return bj_check_for_blackjack()
         return bj_state
     
-    if Pixel_Währung_und_Sammlung.wallet.get() == 0:
+    if Pixel_Währung_und_Sammlung.wallet.get() == 0: #Human 
         game_state = "normal"
         return game_state
 
     return bj_state
 
+def blackjack_draw_trigger(screen, blackjack_trigger_zones): #Human 
+    for i in range(len(blackjack_trigger_zones)):
+        pygame.draw.rect(screen, (144, 213, 255), blackjack_trigger_zones[i])
+
 # ----- Zustand: Zeichnen des Blackjack-Panels -----
-def blackjackspiel_zeichnen(bj_state, screen):
+def blackjackspiel_zeichnen(bj_state, screen): # fully AI
     """Zeichnet das Blackjack-Panel mit Karten, Texten und Status."""
     
     # 1. Das Haupt-Panel und der Titel werden immer gezeichnet
