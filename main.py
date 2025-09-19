@@ -18,9 +18,9 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
-
+#all rect objects or sprites that arent the player are added here
 almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npcs, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone, ostblock.map_imgsp, Reaktion.reaktion_trigger_zone], mapinteraction.almosteverything)
-
+# variables for remembering things between frames
 last_pixel = 0
 last_renzo = "Renzo/Renzo_1.png"
 last_interaction = 0
@@ -41,7 +41,7 @@ slots_state = "auf_Start_warten" # für Slots
 bj_state = "bj_waiting"
 Titel_effect.show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7)
 musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
-
+#main loop
 while running:
     
      # Events *einmal* pro Frame holen
@@ -51,7 +51,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE: #game stops when ESCAPE is pressed
                     running = False
                 if event.key == pygame.K_p and game_state == "normal":
                     shop_system.shop.toggle()
@@ -76,7 +76,7 @@ while running:
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
             game_state,slots_state = Slots.slotloop(game_state,slots_state, events)
             game_state,bj_state = black_jack.blackjackloop(game_state, bj_state, events)
-            Characters.stepsw, Characters.stepsp, xw, yw, xp, yp = Characters.npcmovement(Characters.npcs, Characters.stepsw, Characters.npcspeedw, Characters.stepsp, Characters.npcspeedp)
+            Characters.stepsw, Characters.stepsp, xw, yw, xp, yp = Characters.npcmovement(Characters.npcs, Characters.stepsw, Characters.npcspeedw, Characters.stepsp, Characters.npcspeedp) #moving npcs
             lives, last_interaction = Characters.npcinteraction(lives, last_interaction)
             game_state = Reaktion.reaktionloop(game_state)
 
