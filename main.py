@@ -35,10 +35,10 @@ dx, dy = 0, 0
 
 running = True
 sprint_unlocked = False
-game_state = "normal" # Die EINZIGE game_state Variable
+game_state = "normal" 
 current_state = "waiting_for_bet" # für Roulette
 slots_state = "auf_Start_warten" # für Slots
-bj_state = "bj_waiting"
+bj_state = "bj_waiting" # für blackjack
 Titel_effect.show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7)
 musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
 #main loop
