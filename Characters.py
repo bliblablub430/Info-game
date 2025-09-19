@@ -7,7 +7,7 @@ import sprites
 import random
 
 pygame.init()
-pygame.display.set_caption("Frau_Weidman_Hunter69")
+pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
 farben = ["R", "Gr", "B", "G", "P"]  # Farbe pro Pixeltyp 
@@ -25,17 +25,17 @@ character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
 xw, yw = 800, 600
 hw, lw = 40, 50
 stepsw = 0
-npcspeedw = 22
+npcspeedw = 18
 frau_weidmann = sprites.Sprites("Vampir\Silke_1.png", pygame.Rect(xw, yw, hw, lw))
 #Pharao
 xp, yp = 100, 800
 hp, lp = 40, 50
 stepsp = 0
-npcspeedp = 24
+npcspeedp = 19
 pharao = sprites.Sprites("Pharao\Pharao_1.png", pygame.Rect(xp, yp, hp, lp))
 #alle npcs
 npcs = [frau_weidmann, pharao]
-
+#lists for drawing different collors
 pixles = []
 pixles_R = []
 pixles_Gr = []
@@ -46,7 +46,7 @@ pixles_P = []
 def movement(x, y, speed, sprint_unlocked): #actuall movement happens in mapinteraction.wallinteraction
     keys = pygame.key.get_pressed()
     if sprint_unlocked:
-        if keys[pygame.K_RSHIFT]:
+        if keys[pygame.K_RSHIFT]: # sprinting can be bought in shop
             speedc = speed*2
         else:
             speedc = speed
@@ -61,8 +61,8 @@ def movement(x, y, speed, sprint_unlocked): #actuall movement happens in mapinte
         character.rect.y = y
     return x, y, (dx*speedc), (dy*speedc)
 
-def get_movement_vector():
-    dx, dy = 0, 0  # Start with no movement
+def get_movement_vector(): # ai assisted
+    dx, dy = 0, 0
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_d]:
@@ -81,7 +81,7 @@ def get_movement_vector():
         dx = dx / vector_len
         dy = dy / vector_len
         
-    return dx, dy # Return the calculated direction
+    return dx, dy
 
 def npcmovement(npcs, stepsw, npcspeedw, stepsp, npcspeedp):
     xw, yw = frau_weidmann.rect.x, frau_weidmann.rect.y
@@ -129,7 +129,7 @@ def npcmovement(npcs, stepsw, npcspeedw, stepsp, npcspeedp):
                 stepsw = 0
             stepsw += 1
         elif npc == pharao:
-            # npc läuft Dreieck ab
+            # npc algorithm 2
             if stepsp < 500:
                 npc.rect.x += npcspeedp  # nach rechts
                 xp = npc.rect.x
@@ -170,7 +170,7 @@ def npcmovement(npcs, stepsw, npcspeedw, stepsp, npcspeedp):
                 stepsp = 0
             stepsp += 1
     return stepsw, stepsp, xw, yw, xp, yp
-         
+#gain 5k pixles and lose a life if touched by an npc
 def npcinteraction(lives, last_interaction):
     current_time = pygame.time.get_ticks()
     npc_coolown = 1000
@@ -182,8 +182,8 @@ def npcinteraction(lives, last_interaction):
     return lives, last_interaction
 
 
-
-def drawing(screen, character, npcs, pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp):
+#draws walls and pixles, animates character and npcs 
+def drawing(screen, character, pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp):
     #check for drawing a pixel
     current_time = pygame.time.get_ticks()
     pixel_coolown = 105
@@ -411,7 +411,7 @@ def drawing(screen, character, npcs, pixles, last_pixel, last_renzo, stepsw, ste
 
     return last_pixel, last_renzo, stepsw, stepsp
 
-
+#creates a pixle and adds it to almosteverything so it stays in place
 def draw(x,y):
     if Pixel_Währung_und_Sammlung.wallet.can_spend(1):
         pixle = pygame.Rect(x, y, 50, 50)

@@ -26,7 +26,7 @@ class PixelBank:
     def get(self):  # Anzahl Pixel abfragen
         return self.amount
     
-wallet = PixelBank()
+wallet = PixelBank() # wariable to acces class PixelBank
 
 # HUD: Anzeige oben rechts/links 
 def menu(surface, hudx, hudy, amount, size=150, gap=6):

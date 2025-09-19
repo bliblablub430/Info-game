@@ -1,12 +1,17 @@
 Anleitung Musik Funktionen
 
+
 Beispiel für main_theme.mp3: 
 
-Musik starten: (einmal abspielen)
+Schritt (1) Oben in eurer Datei einfügen:
+play_music()("assets/sfx/main_theme.mp3)
+
+Schritt (2) Musik starten: (einmal abspielen)
 play_music ("assets/sfx/main_theme.mp3", loop=False)
 
-Musik starten: (Endlosschleife)
+Schritt (2b) Musik starten: (Endlosschleife)
 play_music ("assets/sfx/main_theme.mp3", loop=True)
 
-Musik enden:
+
+Schritt (3) Musik enden:
 stop_music()
