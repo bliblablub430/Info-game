@@ -1,3 +1,4 @@
+# Demo Kommentar
 import pygame
 import sprites
 
