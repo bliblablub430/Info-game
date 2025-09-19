@@ -5,7 +5,7 @@ pygame.init()
 screen = pygame.display.set_mode((1920, 1080))
 clock = pygame.time.Clock()
 # Map-Bild laden
-map_img = pygame.image.load("Lerbermatt_3Version.png").convert()
+map_img = pygame.image.load("Lerbermatt_premium.png").convert()
 width, height = map_img.get_size()
 TILESIZE = 15
 # Liste für Wände
@@ -26,7 +26,7 @@ def wallcreation():
             r, g, b = color
             
             # Lege einen Schwellenwert fest. Alle Farben, deren RGB-Werte
-            # ALLE unter diesem Wert liegen, gelten als "fast schwarz". # AI generated
+            # ALLE unter diesem Wert liegen, gelten als "fast schwarz".     # AI generated
             # Ein Wert um 10 ist gut für kleine Abstufungen.
             threshold = 10 
             
@@ -40,7 +40,7 @@ def walldraw(screen):
         pygame.draw.rect(screen, (0, 0, 0), wall)
 
 map_imgup = pygame.transform.scale(map_img, (TILESIZE*width, TILESIZE*height))
-map_imgsp = sprites.Sprites("Lerbermatt_3Version.png", pygame.Rect(offset_x, offset_y, width*TILESIZE, height*TILESIZE))
+map_imgsp = sprites.Sprites("Lerbermatt_premium.png", pygame.Rect(offset_x, offset_y, width*TILESIZE, height*TILESIZE))
 
 def drawmap(map_imgup):
     screen.blit(map_imgup, map_imgsp.rect)
