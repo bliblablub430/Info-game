@@ -1,4 +1,4 @@
-# Reaktion.py
+# Reaktion.py #es gab probleme mit dem File, eine AI hat es so überarbeitet, dass es keinen while loop in der Funktion mehr gab. 
 import pygame
 import time
 import Characters
@@ -16,7 +16,7 @@ font = pygame.font.SysFont(None, 48)
 font_large = pygame.font.SysFont(None, 80)
 
 # --- Trigger-Zone ---
-reaktion_X = 1000
+reaktion_X = 1500
 reaktion_Y = 1000
 reaktion_Breite = 50
 reaktion_Höhe = 50
@@ -38,9 +38,7 @@ ergebnis_text = ""
 def unterschied(a, b):
     return abs(a - b)
 
-# --- Hauptfunktionen (bereit für main.py) ---
-
-def reaktion_reset():
+def reaktion_reset(): #AI
     """Setzt alle Spielvariablen für eine neue Runde zurück."""
     global aktuelle_index, wechselzahl, letzter_wechsel, user_input, start_zeit, game_over, ergebnis_text
     
@@ -97,7 +95,7 @@ def reaktion_logik(events):
                     
                     game_over = True
 
-        # 2. Zahl wechseln (ca. alle 0.1 Sekunden)
+        # 2. Zahl wechseln (ca. alle 0.1 Sekunden) #AI
         if time.time() - letzter_wechsel > 0.1:
             aktuelle_index = (aktuelle_index + 1) % len(zahlen_liste)
             wechselzahl = zahlen_liste[aktuelle_index]
@@ -114,7 +112,7 @@ def reaktion_logik(events):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 reaktion_reset() # Spiel neu starten
 
-def reaktion_zeichnen(screen):
+def reaktion_zeichnen(screen): #von blackjack.py übernommen, system von AI geschrieben
     """Zeichnet die Oberfläche des Reaktionsspiels."""
     
     # Ein Panel als Hintergrund zeichnen, damit es sich vom Hauptspiel abhebt

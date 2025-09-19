@@ -35,10 +35,10 @@ dx, dy = 0, 0
 
 running = True
 sprint_unlocked = False
-game_state = "normal" # Die EINZIGE game_state Variable
+game_state = "normal" 
 current_state = "waiting_for_bet" # für Roulette
 slots_state = "auf_Start_warten" # für Slots
-bj_state = "bj_waiting"
+bj_state = "bj_waiting" # für blackjack
 Titel_effect.show_game_title_fade(screen, title="Frau_Weidtmann_Hunter69", duration=7)
 musik.play_music("assets/sfx/main_theme.mp3", loop=True, volume=0.5)
 #main loop
@@ -104,9 +104,11 @@ while running:
      lives = herz_system.draw_lives(screen, lives)
      if lives == 0:
           pygame.quit()
+    #hier werden verschiedene Menus und icons gerendered
      Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
      shop_system.draw_shop_icon(shop_system.surface, shop_system.sx, shop_system.sy, size = 200)
      shop_system.shop.draw(screen, Pixel_Währung_und_Sammlung.wallet)
+    
      if game_state == "roulette":
           Gambling.roulettespiel_zeichnen(current_state, screen)
      elif game_state == "slot":
@@ -115,6 +117,7 @@ while running:
           black_jack.blackjackspiel_zeichnen(bj_state, screen)
      elif game_state == "Reaktion":
           Reaktion.reaktion_zeichnen(screen)
+    
      pygame.display.update()
      clock.tick(60)
 
