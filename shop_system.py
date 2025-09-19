@@ -8,7 +8,7 @@ sx = 1900
 sy = 1000
 max_lives = 3
 
-def draw_shop_icon(surface, sx, sy, size=200):
+def draw_shop_icon(surface, sx, sy, size=200): 
     # Shop Symbol unten rechts zeichnen
     icon_surface = pygame.Surface((size, size))
     icon_surface.fill((255, 220, 0))  # Gelbe Farbe
@@ -17,12 +17,12 @@ def draw_shop_icon(surface, sx, sy, size=200):
     font = pygame.font.Font(None, size-150)
     text_surface = font.render("SHOP", True, (255, 255, 255))
 
-    # Positionen für rechts unten berechnen
+    # Positionen für rechts unten berechnen #bearbeitet von Human 
     total_width = size + 5 + text_surface.get_width()
     total_height = max(size, text_surface.get_height())
 
     icon_x = sx - total_width
-    icon_y = sy - total_height
+    icon_y = sy - total_height 
 
     text_x = icon_x
     text_y = sy - icon_surface.get_height()
@@ -122,4 +122,4 @@ class Shop:
         hint = self.small.render("↑/↓ wählen  Enter kaufen  Q schließen", True, (180, 180, 180))
         surface.blit(bal,  (panel.x + 24, panel.bottom - 48))
         surface.blit(hint, (panel.x + 24, panel.bottom - 28))
-shop = Shop()
+shop = Shop() # Human 

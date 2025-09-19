@@ -45,7 +45,7 @@ def walldraw(screen):
 #Human made
 map_imgup = pygame.transform.scale(map_img, (TILESIZE*width, TILESIZE*height))
 map_imgsp = sprites.Sprites("Lerbermatt_3Version.png", pygame.Rect(offset_x, offset_y, width*TILESIZE, height*TILESIZE))
-#Mit AI
+# Human 
 def drawmap(map_imgup):
     screen.blit(map_imgup, map_imgsp.rect)
 
