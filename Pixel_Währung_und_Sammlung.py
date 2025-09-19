@@ -7,7 +7,7 @@ hudy = 100
 
 # Wallet (Währung) – speichert, wie viele Pixel du hast
 class PixelBank:
-    def __init__(self, start=5000):
+    def __init__(self, start=200):
         self.amount = int(start)
 
     def add(self, n=1):  # Pixel hinzufügen

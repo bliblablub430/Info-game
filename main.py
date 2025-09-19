@@ -8,7 +8,6 @@ import Slots
 import black_jack
 import herz_system
 import Pixel_Währung_und_Sammlung
-import coordinaten_system
 import shop_system
 import Reaktion
 import Titel_effect
@@ -100,14 +99,13 @@ while running:
      Slots.draw_slots_trigger(screen, Slots.slot_trigger_zones)
      black_jack.blackjack_draw_trigger(screen, black_jack.blackjack_trigger_zones)
 
-     last_pixel, last_renzo, stepsw, stepsp = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp)
+     last_pixel, last_renzo, stepsw, stepsp = Characters.drawing(screen, Characters.character, Characters.pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp)
      pygame.draw.rect(screen,(255,0,0), Reaktion.reaktion_trigger_zone)
      lives = herz_system.draw_lives(screen, lives)
      if lives == 0:
           pygame.quit()
      Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
      shop_system.draw_shop_icon(shop_system.surface, shop_system.sx, shop_system.sy, size = 200)
-     coordinaten_system.draw_coords(coordinaten_system.surface, Characters.character.rect, font_size=24, padding=5)
      shop_system.shop.draw(screen, Pixel_Währung_und_Sammlung.wallet)
      if game_state == "roulette":
           Gambling.roulettespiel_zeichnen(current_state, screen)

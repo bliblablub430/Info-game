@@ -40,8 +40,8 @@ class Shop:
         self.open = False  # Shop geschlossen
         self.sel = 0       # Auswahl Index
         self.items = [
-            {"id": "sprint", "name": "Sprint freischalten", "cost": 15},
-            {"id": "life",   "name": "+1 Herz",            "cost": 8},
+            {"id": "sprint", "name": "Sprint freischalten", "cost": 4000},
+            {"id": "life",   "name": "+1 Herz",            "cost": 6000},
         ]
         # Schriftarten vorbereiten
         pygame.font.init()
