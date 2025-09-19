@@ -17,7 +17,7 @@ aktuelle_farbe = 0
 x, y = 960, 540
 h, l = 40, 50
 speed = 10
-renzodef = "Renzo\Renzo_1.png"
+renzodef = "Renzo/Renzo_1.png"
 character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
 
 # NPC sprite(s)
@@ -26,13 +26,13 @@ xw, yw = 800, 600
 hw, lw = 40, 50
 stepsw = 0
 npcspeedw = 18
-frau_weidmann = sprites.Sprites("Vampir\Silke_1.png", pygame.Rect(xw, yw, hw, lw))
+frau_weidmann = sprites.Sprites("Vampir/Silke_1.png", pygame.Rect(xw, yw, hw, lw))
 #Pharao
 xp, yp = 100, 800
 hp, lp = 40, 50
 stepsp = 0
 npcspeedp = 19
-pharao = sprites.Sprites("Pharao\Pharao_1.png", pygame.Rect(xp, yp, hp, lp))
+pharao = sprites.Sprites("Pharao/Pharao_1.png", pygame.Rect(xp, yp, hp, lp))
 #alle npcs
 npcs = [frau_weidmann, pharao]
 #lists for drawing different collors
@@ -213,7 +213,7 @@ def drawing(screen, character, pixles, last_pixel, last_renzo, stepsw, stepsp, x
     #Drawing everything
     ostblock.walldraw(screen) #Draw wall
     dx, dy = get_movement_vector()
-    renzo = ["Renzo\Renzo_1.png", "Renzo\Renzo_2.png", "Renzo\Renzo_3.png", "Renzo\Renzo_4.png", "Renzo\Renzo_5.png", "Renzo\Renzo_6.png", "Renzo\Renzo_7.png", "Renzo\Renzo_8.png", "Renzo\Renzo_9.png", "Renzo\Renzo_10.png", "Renzo\Renzo_11.png", "Renzo\Renzo_12.png", ]
+    renzo = ["Renzo/Renzo_1.png", "Renzo/Renzo_2.png", "Renzo/Renzo_3.png", "Renzo/Renzo_4.png", "Renzo/Renzo_5.png", "Renzo/Renzo_6.png", "Renzo/Renzo_7.png", "Renzo/Renzo_8.png", "Renzo/Renzo_9.png", "Renzo/Renzo_10.png", "Renzo/Renzo_11.png", "Renzo/Renzo_12.png", ]
     if dy < 0:
         renzodef = random.choice(renzo[0:3])
         character = sprites.Sprites(renzodef, pygame.Rect(x, y, h, l))
@@ -239,7 +239,7 @@ def drawing(screen, character, pixles, last_pixel, last_renzo, stepsw, stepsp, x
         screen.blit(character.image, character.rect) # Draw player sprite
     # npc animation
     # frau_weidmann
-    silke = ["Vampir\Silke_1.png", "Vampir\Silke_2.png", "Vampir\Silke_3.png", "Vampir\Silke_4.png", "Vampir\Silke_5.png", "Vampir\Silke_6.png", "Vampir\Silke_7.png", "Vampir\Silke_8.png", ]
+    silke = ["Vampir/Silke_1.png", "Vampir/Silke_2.png", "Vampir/Silke_3.png", "Vampir/Silke_4.png", "Vampir/Silke_5.png", "Vampir/Silke_6.png", "Vampir/Silke_7.png", "Vampir/Silke_8.png", ]
     if stepsw < 250:
         if stepsw % 5 == 0: #alle fünf frames
             frau_weidmann = sprites.Sprites(silke[2], pygame.Rect(xw, yw, hw, lw))
@@ -276,7 +276,7 @@ def drawing(screen, character, pixles, last_pixel, last_renzo, stepsw, stepsp, x
             frau_weidmann = sprites.Sprites(silke[3], pygame.Rect(xw, yw, hw, lw))
             screen.blit(frau_weidmann.image, frau_weidmann.rect)  # nach links
     elif stepsw < 2000:
-        if stepsw % 5 == 0:
+        if stepsw % 5 == 0:                                                              
             frau_weidmann = sprites.Sprites(silke[0], pygame.Rect(xw, yw, hw, lw))
             screen.blit(frau_weidmann.image, frau_weidmann.rect) # Draw NPC sprite(s)
         else:
@@ -307,7 +307,7 @@ def drawing(screen, character, pixles, last_pixel, last_renzo, stepsw, stepsp, x
         stepsw = 0
     stepsw += 1
     #pharao
-    zady = ["Pharao\Pharao_1.png", "Pharao\Pharao_2.png", "Pharao\Pharao_3.png", "Pharao\Pharao_4.png", "Pharao\Pharao_5.png", "Pharao\Pharao_6.png", "Pharao\Pharao_7.png", "Pharao\Pharao_8.png", "Pharao\Pharao_9.png", "Pharao\Pharao_10.png", ]
+    zady = ["Pharao/Pharao_1.png", "Pharao/Pharao_2.png", "Pharao/Pharao_3.png", "Pharao/Pharao_4.png", "Pharao/Pharao_5.png", "Pharao/Pharao_6.png", "Pharao/Pharao_7.png", "Pharao/Pharao_8.png", "Pharao/Pharao_9.png", "Pharao/Pharao_10.png", ]
     if stepsp < 500:
         if stepsp % 5 == 0: #alle fünf frames
             pharao = sprites.Sprites(zady[6], pygame.Rect(xp, yp, hp, lp))
