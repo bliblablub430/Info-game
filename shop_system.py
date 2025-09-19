@@ -1,5 +1,5 @@
-import pygame
-
+import pygame 
+# Ebenfalls von AI, editiert von Luc
 surface = pygame.display.set_mode((1920, 1080))
 
 sx = 1900

@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((1920, 1080))
 pygame.display.set_caption("Frau_Weidtmann_Hunter69")
 clock = pygame.time.Clock()
 
-almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zone, Characters.npcs, Slots.slot_trigger_zone, black_jack.blackjack_trigger_zone, ostblock.map_imgsp, Reaktion.reaktion_trigger_zone], mapinteraction.almosteverything)
+almosteverything = mapinteraction.add_to_almosteverything([ostblock.wallcreation(), Gambling.roulette_trigger_zones, Characters.npcs, Slots.slot_trigger_zones, black_jack.blackjack_trigger_zones, ostblock.map_imgsp, Reaktion.reaktion_trigger_zone], mapinteraction.almosteverything)
 
 last_pixel = 0
 last_renzo = "Renzo/Renzo_1.png"
@@ -70,7 +70,6 @@ while running:
         game_state = black_jack.escapeblackjack(game_state, event)
         game_state = Reaktion.escapereaktion(game_state, event)
 
-    # RUFE die rouletteloop auf und fange den neuen State auf
      if game_state == "normal":
             x, y, dx, dy = mapinteraction.wallinteraction(x, y, dx, dy, almosteverything, sprint_unlocked) #Wall collition plus Character Movement
             game_state,current_state = Gambling.rouletteloop(game_state, current_state, events)
@@ -95,14 +94,16 @@ while running:
      # ZEICHNEN
      screen.fill((255, 255, 255)) # Hintergrund
      ostblock.drawmap(ostblock.map_imgup)
-     pygame.draw.rect(screen, (255, 0, 0), Gambling.roulette_trigger_zone)
+
+     Gambling.draw_roulette_trigger(Gambling.roulette_trigger_zones, screen)
+     Slots.draw_slots_trigger(screen, Slots.slot_trigger_zones)
+     black_jack.blackjack_draw_trigger(screen, black_jack.blackjack_trigger_zones)
+
      last_pixel, last_renzo, stepsw, stepsp = Characters.drawing(screen, Characters.character, Characters.npcs, Characters.pixles, last_pixel, last_renzo, stepsw, stepsp, xw, yw, xp, yp)
      pygame.draw.rect(screen,(255,0,0), Reaktion.reaktion_trigger_zone)
      lives = herz_system.draw_lives(screen, lives)
      if lives == 0:
           pygame.quit()
-     pygame.draw.rect(screen, (255, 0, 0), Slots.slot_trigger_zone)
-     pygame.draw.rect(screen, (255, 0, 0), black_jack.blackjack_trigger_zone)
      Pixel_Währung_und_Sammlung.menu(Pixel_Währung_und_Sammlung.surface, Pixel_Währung_und_Sammlung.hudx, Pixel_Währung_und_Sammlung.hudy, Pixel_Währung_und_Sammlung.wallet.get(), size=150, gap=6)
      shop_system.draw_shop_icon(shop_system.surface, shop_system.sx, shop_system.sy, size = 200)
      coordinaten_system.draw_coords(coordinaten_system.surface, Characters.character.rect, font_size=24, padding=5)
